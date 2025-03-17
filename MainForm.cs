@@ -144,85 +144,78 @@ namespace SelectRegionForDbd
 
         private async Task CreateRules(string excludedRegion)
         {
-            string url = "https://ip-ranges.amazonaws.com/ip-ranges.json";
-            // string filePathIn = "IP_ranges_in.txt";
-            // string filePathOut = "IP_ranges_out.txt"; 
-            string scriptPathIn = "firewall_in.ps1";
-            string scriptPathOut = "firewall_out.ps1";
-            // Список разрешенных регионов
-            HashSet<string> allowedRegions =
-            [
-                "us-east-2", "us-west-1", "us-west-2",
+            bool hosts = Hosts.Write(excludedRegion);
+            if (hosts)
+            {
+                string url = "https://ip-ranges.amazonaws.com/ip-ranges.json";
+                // string filePathIn = "IP_ranges_in.txt";
+                // string filePathOut = "IP_ranges_out.txt"; 
+                string scriptPathIn = "firewall_in.ps1";
+                string scriptPathOut = "firewall_out.ps1";
+                HashSet<string> allowedRegions =
+                [
+                    "us-east-2", "us-west-1", "us-west-2",
                 "ap-south-1", "ap-northeast-2", "ap-southeast-1", "ap-southeast-2",
                 "ap-northeast-1", "ca-central-1", "eu-central-1", "eu-west-1",
                 "eu-west-2", "sa-east-1"
-            ];
+                ];
 
-            try
-            {
-                using HttpClient client = new();
-                string json = await client.GetStringAsync(url);  // Получаем JSON-строку
-                using JsonDocument doc = JsonDocument.Parse(json);  // Парсим JSON
-                // Получаем массив IP-диапазонов
-                var prefixes = doc.RootElement.GetProperty("prefixes");
-                List<string> allIps = [];
-                foreach (var entry in prefixes.EnumerateArray())
+                try
                 {
-                    string region = entry.GetProperty("region").GetString()!;
-
-                    // Если регион в списке разрешенных и не исключен
-                    if (allowedRegions.Contains(region) && region != excludedRegion)
+                    using HttpClient client = new();
+                    string json = await client.GetStringAsync(url);
+                    using JsonDocument doc = JsonDocument.Parse(json);
+                    var prefixes = doc.RootElement.GetProperty("prefixes");
+                    List<string> allIps = [];
+                    foreach (var entry in prefixes.EnumerateArray())
                     {
-                        // Проверяем, что есть поле ip_prefix и оно соответствует IPv4
-                        if (entry.TryGetProperty("ip_prefix", out var ipPrefix) && ipPrefix.GetString()?.Contains('.') == true)
+                        string region = entry.GetProperty("region").GetString()!;
+                        if (allowedRegions.Contains(region) && region != excludedRegion)
                         {
-                            allIps.Add(ipPrefix.GetString()!);
+                            if (entry.TryGetProperty("ip_prefix", out var ipPrefix) && ipPrefix.GetString()?.Contains('.') == true)
+                            {
+                                allIps.Add(ipPrefix.GetString()!);
+                            }
                         }
                     }
+                    string resultIn = string.Join(",", allIps);
+                    string resultOut = string.Join(",", allIps);
+                    string ruleIn = $"New-NetFirewallRule -Name \"DbdBlockRule_IN\" -DisplayName \"DbdBlockRule_IN\" -Direction Inbound -Action Block -Program \"{FilePath.Text}\" -RemoteAddress ";
+                    string ruleOut = $"New-NetFirewallRule -Name \"DbdBlockRule_OUT\" -DisplayName \"DbdBlockRule_OUT\" -Direction Out -Action Block -Program \"{FilePath.Text}\" -RemoteAddress ";
+                    resultIn = ruleIn + resultIn;
+                    resultOut = ruleOut + resultOut;
+                    // Сохраняем в файл
+                    // await File.WriteAllTextAsync(filePathIn, resultIn);
+                    // await File.WriteAllTextAsync(filePathOut, resultOut);
+                    await File.WriteAllTextAsync(scriptPathIn, resultIn);
+                    await File.WriteAllTextAsync(scriptPathOut, resultOut);
+                    bool resultInCommand = RunPowerShellScript(scriptPathIn);
+                    bool resultOutCommand = RunPowerShellScript(scriptPathOut);
+                    if (resultInCommand && resultOutCommand)
+                    {
+                        MessageBox.Show("Rules have been successfully added");
+                        FlushDnsCache();
+                        GetPing();
+                        CheckFirewallRule(Status);
+                        // Удаляем файлы после выполнения
+                        // if (File.Exists(filePathIn)) File.Delete(filePathIn);
+                        // if (File.Exists(filePathOut)) File.Delete(filePathOut);
+                        if (File.Exists(scriptPathIn)) File.Delete(scriptPathIn);
+                        if (File.Exists(scriptPathOut)) File.Delete(scriptPathOut);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to add rules");
+                    }
                 }
-                // Собираем все IP-адреса в строку
-                string resultIn = string.Join(",", allIps);
-                string resultOut = string.Join(",", allIps);
-                // Для правила входящего трафика
-                string ruleIn = $"New-NetFirewallRule -Name \"DbdBlockRule_IN\" -DisplayName \"DbdBlockRule_IN\" -Direction Inbound -Action Block -Program \"{FilePath.Text}\" -RemoteAddress ";
-                string ruleOut = $"New-NetFirewallRule -Name \"DbdBlockRule_OUT\" -DisplayName \"DbdBlockRule_OUT\" -Direction Out -Action Block -Program \"{FilePath.Text}\" -RemoteAddress ";
-                // Соединяем правило с IP-адресами
-                resultIn = ruleIn + resultIn;
-                resultOut = ruleOut + resultOut;
-                // Сохраняем в файл
-                // await File.WriteAllTextAsync(filePathIn, resultIn);
-                // await File.WriteAllTextAsync(filePathOut, resultOut);
-                // Сохраняем команды в скрипты
-                await File.WriteAllTextAsync(scriptPathIn, resultIn);
-                await File.WriteAllTextAsync(scriptPathOut, resultOut);
-
-                bool resultInCommand = RunPowerShellScript(scriptPathIn);
-                bool resultOutCommand = RunPowerShellScript(scriptPathOut);
-
-                if (resultInCommand && resultOutCommand)
+                catch (HttpRequestException ex)
                 {
-                    MessageBox.Show("Rules have been successfully added");
-                    FlushDnsCache();
-                    GetPing();
-                    CheckFirewallRule(Status);
-                    // Удаляем файлы после выполнения
-                    // if (File.Exists(filePathIn)) File.Delete(filePathIn);
-                    // if (File.Exists(filePathOut)) File.Delete(filePathOut);
-                    if (File.Exists(scriptPathIn)) File.Delete(scriptPathIn);
-                    if (File.Exists(scriptPathOut)) File.Delete(scriptPathOut);
+                    MessageBox.Show($"Error while requesting data: {ex.Message}");
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Failed to add rules");
+                    MessageBox.Show($"An error occurred: {ex.Message}");
                 }
-            }
-            catch (HttpRequestException ex)
-            {
-                MessageBox.Show($"Error while requesting data: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"An error occurred: {ex.Message}");
             }
         }
 
