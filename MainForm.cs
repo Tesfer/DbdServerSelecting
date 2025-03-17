@@ -22,24 +22,22 @@ namespace SelectRegionForDbd
             FilePath.Select(0, 0);
         }
 
-        private async void Ping(string host, Label label)
+        private static async void Ping(string host, Label label)
         {
             try
             {
-                using (Ping ping = new Ping())
+                using Ping ping = new();
+                PingReply reply = await ping.SendPingAsync(host);
+                if (reply.Status == IPStatus.Success)
                 {
-                    PingReply reply = await ping.SendPingAsync(host);
-                    if (reply.Status == IPStatus.Success)
-                    {
-                        label.Text = $"{reply.RoundtripTime} ms";
-                        label.ForeColor = reply.RoundtripTime < 100 ? Color.Green :
-                                          reply.RoundtripTime < 200 ? Color.Orange : Color.Red;
-                    }
-                    else
-                    {
-                        label.Text = "-1";
-                        label.ForeColor = Color.Red;
-                    }
+                    label.Text = $"{reply.RoundtripTime} ms";
+                    label.ForeColor = reply.RoundtripTime < 100 ? Color.Green :
+                                      reply.RoundtripTime < 200 ? Color.Orange : Color.Red;
+                }
+                else
+                {
+                    label.Text = "-1";
+                    label.ForeColor = Color.Red;
                 }
             }
             catch
@@ -66,7 +64,7 @@ namespace SelectRegionForDbd
             Ping("gamelift.us-west-2.amazonaws.com", OregonPing);
             Ping("gamelift.sa-east-1.amazonaws.com", PauloPing);
         }
-        private void CheckFirewallRule(Label label)
+        private static void CheckFirewallRule(Label label)
         {
             try
             {
@@ -91,11 +89,11 @@ namespace SelectRegionForDbd
             }
         }
 
-        private bool RunPowerShellCommand(string command)
+        private static bool RunPowerShellCommand(string command)
         {
             try
             {
-                ProcessStartInfo pro = new ProcessStartInfo
+                ProcessStartInfo pro = new()
                 {
                     FileName = "powershell.exe",
                     Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{command}\"",
@@ -106,16 +104,12 @@ namespace SelectRegionForDbd
                     Verb = "runas"
                 };
 
-                using (Process process = Process.Start(pro)!)
-                {
-                    if (process == null) return false;
-                    using (System.IO.StreamReader reader = process.StandardOutput)
-                    {
-                        string result = reader.ReadToEnd();
-                        process.WaitForExit();
-                        return !string.IsNullOrEmpty(result);
-                    }
-                }
+                using Process process = Process.Start(pro)!;
+                if (process == null) return false;
+                using System.IO.StreamReader reader = process.StandardOutput;
+                string result = reader.ReadToEnd();
+                process.WaitForExit();
+                return !string.IsNullOrEmpty(result);
             }
             catch (Exception ex)
             {
@@ -130,8 +124,8 @@ namespace SelectRegionForDbd
         {
             string powerShellCommandInBound = "Remove-NetFirewallRule -DisplayName 'DbdBlockRule_IN'";
             string powerShellCommandOutBound = "Remove-NetFirewallRule -DisplayName 'DbdBlockRule_OUT'";
-            bool resultInBound = RunPowerShellCommand(powerShellCommandInBound);
-            bool resultOutBound = RunPowerShellCommand(powerShellCommandOutBound);
+            RunPowerShellCommand(powerShellCommandInBound);
+            RunPowerShellCommand(powerShellCommandOutBound);
             bool isInBoundRuleRemoved = !IsRulePresent("DbdBlockRule_IN");
             bool isOutBoundRuleRemoved = !IsRulePresent("DbdBlockRule_OUT");
             if (isInBoundRuleRemoved && isOutBoundRuleRemoved)
@@ -155,22 +149,22 @@ namespace SelectRegionForDbd
             string scriptPathIn = "firewall_in.ps1";
             string scriptPathOut = "firewall_out.ps1";
             // Список разрешенных регионов
-            HashSet<string> allowedRegions = new HashSet<string>
-            {
+            HashSet<string> allowedRegions =
+            [
                 "us-east-2", "us-west-1", "us-west-2",
                 "ap-south-1", "ap-northeast-2", "ap-southeast-1", "ap-southeast-2",
                 "ap-northeast-1", "ca-central-1", "eu-central-1", "eu-west-1",
                 "eu-west-2", "sa-east-1"
-            };
+            ];
 
             try
             {
-                using HttpClient client = new HttpClient();
+                using HttpClient client = new();
                 string json = await client.GetStringAsync(url);  // Получаем JSON-строку
                 using JsonDocument doc = JsonDocument.Parse(json);  // Парсим JSON
                 // Получаем массив IP-диапазонов
                 var prefixes = doc.RootElement.GetProperty("prefixes");
-                List<string> allIps = new List<string>();
+                List<string> allIps = [];
                 foreach (var entry in prefixes.EnumerateArray())
                 {
                     string region = entry.GetProperty("region").GetString()!;
@@ -179,7 +173,7 @@ namespace SelectRegionForDbd
                     if (allowedRegions.Contains(region) && region != excludedRegion)
                     {
                         // Проверяем, что есть поле ip_prefix и оно соответствует IPv4
-                        if (entry.TryGetProperty("ip_prefix", out var ipPrefix) && ipPrefix.GetString()?.Contains(".") == true)
+                        if (entry.TryGetProperty("ip_prefix", out var ipPrefix) && ipPrefix.GetString()?.Contains('.') == true)
                         {
                             allIps.Add(ipPrefix.GetString()!);
                         }
@@ -231,9 +225,9 @@ namespace SelectRegionForDbd
             }
         }
 
-        private bool RunPowerShellScript(string scriptPath)
+        private static bool RunPowerShellScript(string scriptPath)
         {
-            ProcessStartInfo psi = new ProcessStartInfo
+            ProcessStartInfo psi = new()
             {
                 FileName = "powershell.exe",
                 Arguments = $"-NoProfile -ExecutionPolicy Bypass -File \"{scriptPath}\"",
@@ -246,20 +240,18 @@ namespace SelectRegionForDbd
 
             try
             {
-                using (Process process = Process.Start(psi)!)
+                using Process process = Process.Start(psi)!;
+                if (process != null)
                 {
-                    if (process != null)
-                    {
-                        string output = process.StandardOutput.ReadToEnd();
-                        string error = process.StandardError.ReadToEnd();
-                        process.WaitForExit();
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+                    process.WaitForExit();
 
-                        if (!string.IsNullOrWhiteSpace(error))
-                        {
-                            return false;
-                        }
-                        return true;
+                    if (!string.IsNullOrWhiteSpace(error))
+                    {
+                        return false;
                     }
+                    return true;
                 }
             }
             catch (Exception ex)
@@ -270,11 +262,11 @@ namespace SelectRegionForDbd
         }
 
 
-        private void FlushDnsCache()
+        private static void FlushDnsCache()
         {
             try
             {
-                ProcessStartInfo processStartInfo = new ProcessStartInfo
+                ProcessStartInfo processStartInfo = new()
                 {
                     FileName = "cmd.exe", 
                     Arguments = "/C ipconfig /flushdns", 
@@ -283,10 +275,8 @@ namespace SelectRegionForDbd
                     RedirectStandardOutput = true 
                 };
 
-                using (Process process = Process.Start(processStartInfo)!)
-                {
-                    process.WaitForExit();
-                }
+                using Process process = Process.Start(processStartInfo)!;
+                process.WaitForExit();
             }
             catch (Exception ex)
             {
@@ -294,13 +284,13 @@ namespace SelectRegionForDbd
             }
         }
 
-        private bool IsRulePresent(string ruleName)
+        private static bool IsRulePresent(string ruleName)
         {
             string command = $"Get-NetFirewallRule | Where-Object {{ $_.DisplayName -eq '{ruleName}' }}";
             return RunPowerShellCommand(command);
         }
 
-        private void btnSelectFile_Click(object sender, EventArgs e)
+        private void BtnSelectFile_Click(object sender, EventArgs e)
         {
             openFileDialog.Title = "Select file DeadByDaylight-Win64-Shipping.exe";
             openFileDialog.Filter = "Executable files (DeadByDaylight-Win64-Shipping.exe)|DeadByDaylight-Win64-Shipping.exe";
@@ -311,7 +301,7 @@ namespace SelectRegionForDbd
             }
         }
 
-        private async void btnCreateRules_Click(object sender, EventArgs e)
+        private async void BtnCreateRules_Click(object sender, EventArgs e)
         {
             if (ServersBox.SelectedItem == null)
             {
@@ -327,7 +317,7 @@ namespace SelectRegionForDbd
             await CreateRules(selectedRegion);
         }
 
-        private void btnRemoveRules_Click(object sender, EventArgs e)
+        private void BtnRemoveRules_Click(object sender, EventArgs e)
         {
             DeleteRules();
         }
