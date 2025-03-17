@@ -49,11 +49,13 @@ namespace SelectRegionForDbd
 
         private bool RunPowerShellCommand(string command)
         {
+            // Путь к PowerShell
+            string powerShellPath = @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe";
             try
             {
                 ProcessStartInfo pro = new ProcessStartInfo
                 {
-                    FileName = "powershell.exe",
+                    FileName = powerShellPath,
                     Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{command}\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -64,6 +66,9 @@ namespace SelectRegionForDbd
 
                 using (Process process = Process.Start(pro)!)
                 {
+                    // Чтение ошибок
+                    string error = process.StandardError.ReadToEnd();
+
                     if (process == null) return false;
 
                     // Чтение результата выполнения PowerShell команды
@@ -72,6 +77,12 @@ namespace SelectRegionForDbd
                         string result = reader.ReadToEnd();  // Получаем весь вывод
                         process.WaitForExit();  // Дожидаемся завершения процесса
 
+                        if (!string.IsNullOrEmpty(error))
+                        {
+                            string log = "PowerShellLog.txt";
+                            File.WriteAllTextAsync(log, error);
+                        }
+
                         // Если результат пустой, это значит, что правило не найдено
                         return !string.IsNullOrEmpty(result);
                     }
@@ -79,7 +90,10 @@ namespace SelectRegionForDbd
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при выполнении PowerShell команды: {ex.Message}");
+                // Путь к логам
+                string logPath = "PowerShellMainLog.txt";
+
+                File.WriteAllTextAsync(logPath, ex.Message);
                 return false;
             }
         }
@@ -127,8 +141,26 @@ namespace SelectRegionForDbd
                 // Сохраняем в файл
                 await File.WriteAllTextAsync(filePathIn, resultIn);
                 await File.WriteAllTextAsync(filePathOut, resultOut);
+                // Читаем команды из файлов
+                string commandIn = File.ReadAllText(filePathIn);
+                string commandOut = File.ReadAllText(filePathOut);
+                // Выполнение команд
+                bool resultInCommand = RunPowerShellCommand(commandIn);
+                bool resultOutCommand = RunPowerShellCommand(commandOut);
 
-                MessageBox.Show($"Everything was completed successfully");
+                if (resultInCommand && resultOutCommand)
+                {
+                    MessageBox.Show("Rules have been successfully added");
+                    FlushDnsCache();
+                    CheckFirewallRule(Status);
+                    // Удаляем файлы после выполнения
+                    if (File.Exists(filePathIn)) File.Delete(filePathIn);
+                    if (File.Exists(filePathOut)) File.Delete(filePathOut);
+                }
+                else
+                {
+                    MessageBox.Show("Failed to add rules");
+                }
             }
             catch (HttpRequestException ex)
             {
