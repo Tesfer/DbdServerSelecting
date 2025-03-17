@@ -123,22 +123,32 @@ namespace SelectRegionForDbd
 
         private void DeleteRules()
         {
-            string powerShellCommandInBound = "Remove-NetFirewallRule -DisplayName 'DbdBlockRule_IN'";
-            string powerShellCommandOutBound = "Remove-NetFirewallRule -DisplayName 'DbdBlockRule_OUT'";
-            RunPowerShellCommand(powerShellCommandInBound);
-            RunPowerShellCommand(powerShellCommandOutBound);
-            bool isInBoundRuleRemoved = !IsRulePresent("DbdBlockRule_IN");
-            bool isOutBoundRuleRemoved = !IsRulePresent("DbdBlockRule_OUT");
-            if (isInBoundRuleRemoved && isOutBoundRuleRemoved)
+            if (ServersBox.SelectedItem == null)
             {
-                MessageBox.Show("Rules have been successfully removed");
-                FlushDnsCache();
-                GetPing();
-                CheckFirewallRule(Status);
+                MessageBox.Show("Please select a region");
+                return;
             }
-            else
+            string selectedRegion = ServersBox.SelectedItem.ToString()!;
+            bool hosts = Hosts.Remove(selectedRegion);
+            if (hosts)
             {
-                MessageBox.Show("Rules not found or could not be removed");
+                string powerShellCommandInBound = "Remove-NetFirewallRule -DisplayName 'DbdBlockRule_IN'";
+                string powerShellCommandOutBound = "Remove-NetFirewallRule -DisplayName 'DbdBlockRule_OUT'";
+                RunPowerShellCommand(powerShellCommandInBound);
+                RunPowerShellCommand(powerShellCommandOutBound);
+                bool isInBoundRuleRemoved = !IsRulePresent("DbdBlockRule_IN");
+                bool isOutBoundRuleRemoved = !IsRulePresent("DbdBlockRule_OUT");
+                if (isInBoundRuleRemoved && isOutBoundRuleRemoved)
+                {
+                    MessageBox.Show("Rules have been successfully removed");
+                    FlushDnsCache();
+                    GetPing();
+                    CheckFirewallRule(Status);
+                }
+                else
+                {
+                    MessageBox.Show("Rules not found or could not be removed");
+                }
             }
         }
 
