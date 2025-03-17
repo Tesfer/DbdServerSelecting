@@ -21,20 +21,23 @@ namespace SelectRegionForDbd
         {
             try
             {
-                string powerShellCommandInBound = $"Get-NetFirewallRule | Where-Object {{ $_.DisplayName -eq 'DbdBlockRule_IN' }}";
-                string powerShellCommandOutBound = $"Get-NetFirewallRule | Where-Object {{ $_.DisplayName -eq 'DbdBlockRule_OUT' }}";
+                // Команды для проверки наличия правил по именам
+                string powerShellCommandInBound = "Get-NetFirewallRule | Where-Object { $_.DisplayName -eq 'DbdBlockRule_IN' } | Select-Object -First 1";
+                string powerShellCommandOutBound = "Get-NetFirewallRule | Where-Object { $_.DisplayName -eq 'DbdBlockRule_OUT' } | Select-Object -First 1";
 
+                // Проверка наличия правил
                 bool resultInBound = RunPowerShellCommand(powerShellCommandInBound);
                 bool resultOutBound = RunPowerShellCommand(powerShellCommandOutBound);
 
+                // Обновляем текст Label в зависимости от результатов
                 if (resultInBound && resultOutBound)
                 {
-                    label.Text = "Rules found";
+                    label.Text = "Rules are found";
                     label.ForeColor = Color.Red;
                 }
                 else
                 {
-                    label.Text = "There are no rules";
+                    label.Text = "No rules found";
                     label.ForeColor = Color.Green;
                 }
             }
@@ -48,74 +51,182 @@ namespace SelectRegionForDbd
         {
             try
             {
-                // Запускаем PowerShell команду через Process
-                ProcessStartInfo pro = new ProcessStartInfo();
-                pro.FileName = "powershell.exe";
-                pro.Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{command}\""; // Для отключения профиля и политики
-                pro.RedirectStandardOutput = true;
-                pro.UseShellExecute = false;
-                pro.CreateNoWindow = true;
+                ProcessStartInfo pro = new ProcessStartInfo
+                {
+                    FileName = "powershell.exe",
+                    Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{command}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    Verb = "runas"  // Запуск с правами администратора
+                };
 
                 using (Process process = Process.Start(pro)!)
                 {
+                    if (process == null) return false;
+
                     // Чтение результата выполнения PowerShell команды
                     using (System.IO.StreamReader reader = process.StandardOutput)
                     {
-                        string result = reader.ReadToEnd();
-                        process.WaitForExit();  // Дожидаемся завершения процесса PowerShell
+                        string result = reader.ReadToEnd();  // Получаем весь вывод
+                        process.WaitForExit();  // Дожидаемся завершения процесса
 
-                        // Если результат не пустой, возвращаем true
+                        // Если результат пустой, это значит, что правило не найдено
                         return !string.IsNullOrEmpty(result);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при выполнении команды PowerShell: {ex.Message}");
+                MessageBox.Show($"Ошибка при выполнении PowerShell команды: {ex.Message}");
                 return false;
             }
         }
 
-
-        private async Task<string?> GetSingleIpForRegion(string region)
+        private async Task SaveIps(string excludedRegion)
         {
             string url = "https://ip-ranges.amazonaws.com/ip-ranges.json";
-
+            string filePathIn = "IP_ranges_in.txt";  // Путь к файлу, где будут сохранены IP-адреса
+            string filePathOut = "IP_ranges_out.txt";  // Путь к файлу, где будут сохранены IP-адреса
             try
             {
                 using HttpClient client = new HttpClient();
-                string json = await client.GetStringAsync(url);
-                using JsonDocument doc = JsonDocument.Parse(json);
+                string json = await client.GetStringAsync(url);  // Получаем JSON-строку
+                using JsonDocument doc = JsonDocument.Parse(json);  // Парсим JSON
 
                 // Получаем массив IP-диапазонов
                 var prefixes = doc.RootElement.GetProperty("prefixes");
 
-                // Фильтруем только для конкретного региона и только по полю ip_prefix (IPv4)
-                var filteredIp = prefixes.EnumerateArray()
-                    .Where(entry =>
-                        entry.GetProperty("region").GetString() == region &&  // Фильтруем только по региону
-                        entry.TryGetProperty("ip_prefix", out var ipPrefix))  // Проверяем наличие поля ip_prefix (IPv4)
-                    .Select(entry => entry.GetProperty("ip_prefix").GetString())   // Получаем ip_prefix
-                    .FirstOrDefault(); // Получаем первый из найденных
+                // Список для хранения всех IP-адресов
+                List<string> allIps = new List<string>();
 
-                return filteredIp;  // Если IP найден, возвращаем его, иначе null
+                // Проходим по всем элементам и фильтруем по регионам
+                foreach (var entry in prefixes.EnumerateArray())
+                {
+                    string region = entry.GetProperty("region").GetString()!;
+                    if (region != excludedRegion)  // Исключаем указанный регион
+                    {
+                        // Проверяем, что есть поле ip_prefix и оно соответствует IPv4
+                        if (entry.TryGetProperty("ip_prefix", out var ipPrefix) && ipPrefix.GetString()?.Contains(".") == true)
+                        {
+                            allIps.Add(ipPrefix.GetString()!);
+                        }
+                    }
+                }
+
+                // Собираем все IP-адреса в строку
+                string resultIn = string.Join(",", allIps);
+                string resultOut = string.Join(",", allIps);
+                // Для правила входящего трафика
+                string ruleIn = $"New-NetFirewallRule -Name \"DbdBlockRule_IN\" -DisplayName \"DbdBlockRule_IN\" -Direction Inbound -Action Block -Program \"{FilePath.Text}\" -RemoteAddress ";
+                string ruleOut = $"New-NetFirewallRule -Name \"DbdBlockRule_OUT\" -DisplayName \"DbdBlockRule_OUT\" -Direction Out -Action Block -Program \"{FilePath.Text}\" -RemoteAddress ";
+                // Соединяем правило с IP-адресами
+                resultIn = ruleIn + resultIn;
+                resultOut = ruleOut + resultOut;
+                // Сохраняем в файл
+                await File.WriteAllTextAsync(filePathIn, resultIn);
+                await File.WriteAllTextAsync(filePathOut, resultOut);
+
+                MessageBox.Show($"Everything was completed successfully");
             }
-            catch (Exception)
+            catch (HttpRequestException ex)
             {
-                return null;  // Если произошла ошибка, возвращаем null
+                MessageBox.Show($"Error while requesting data: {ex.Message}");
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}");
+            }
+        }
+
+        private void FlushDnsCache()
+        {
+            try
+            {
+                // Настроим процесс для запуска cmd
+                ProcessStartInfo processStartInfo = new ProcessStartInfo
+                {
+                    FileName = "cmd.exe", // Запуск командной строки
+                    Arguments = "/C ipconfig /flushdns", // Параметр /C выполняет команду и закрывает cmd
+                    CreateNoWindow = true, // Скрываем окно командной строки
+                    UseShellExecute = false, // Не использовать оболочку для выполнения
+                    RedirectStandardOutput = true // Перенаправляем вывод
+                };
+
+                // Запуск процесса
+                using (Process process = Process.Start(processStartInfo)!)
+                {
+                    process.WaitForExit(); // Ожидаем завершения команды
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}");
+            }
+        }
+
+        // Метод для проверки, существует ли правило
+        private bool IsRulePresent(string ruleName)
+        {
+            string command = $"Get-NetFirewallRule | Where-Object {{ $_.DisplayName -eq '{ruleName}' }}";
+            return RunPowerShellCommand(command);
         }
 
         private void btnSelectFile_Click(object sender, EventArgs e)
         {
-            openFileDialog.Title = "Выберите файл DeadByDaylight-Win64-Shipping.exe";
-            openFileDialog.Filter = "Исполнимые файлы (DeadByDaylight-Win64-Shipping.exe)|DeadByDaylight-Win64-Shipping.exe";
+            openFileDialog.Title = "Select file DeadByDaylight-Win64-Shipping.exe";
+            openFileDialog.Filter = "Executable files (DeadByDaylight-Win64-Shipping.exe)|DeadByDaylight-Win64-Shipping.exe";
 
             // Если файл выбран, сохраняем его путь в строку
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string filePath = openFileDialog.FileName;
                 FilePath.Text = $"{filePath}";
+            }
+        }
+
+        private async void btnCreateRules_Click(object sender, EventArgs e)
+        {
+            if (ServersBox.SelectedItem == null)
+            {
+                MessageBox.Show("Please select a region");
+                return;
+            }
+            if (FilePath.Text == string.Empty)
+            {
+                MessageBox.Show("Please specify the path to the executable file");
+                return;
+            }
+
+            string selectedRegion = ServersBox.SelectedItem.ToString()!;
+            await SaveIps(selectedRegion);
+        }
+
+        private void btnRemoveRules_Click(object sender, EventArgs e)
+        {
+            // Команды для удаления правил
+            string powerShellCommandInBound = "Remove-NetFirewallRule -DisplayName 'DbdBlockRule_IN'";
+            string powerShellCommandOutBound = "Remove-NetFirewallRule -DisplayName 'DbdBlockRule_OUT'";
+
+            // Выполнение команд для удаления правил
+            bool resultInBound = RunPowerShellCommand(powerShellCommandInBound);
+            bool resultOutBound = RunPowerShellCommand(powerShellCommandOutBound);
+
+            // Дополнительно проверяем, что правила действительно удалены
+            bool isInBoundRuleRemoved = !IsRulePresent("DbdBlockRule_IN");
+            bool isOutBoundRuleRemoved = !IsRulePresent("DbdBlockRule_OUT");
+
+            // Проверяем, были ли удалены правила
+            if (isInBoundRuleRemoved && isOutBoundRuleRemoved)
+            {
+                MessageBox.Show("Rules have been successfully removed");
+                FlushDnsCache();
+                CheckFirewallRule(Status);
+            }
+            else
+            {
+                MessageBox.Show("Rules not found or could not be removed");
             }
         }
     }

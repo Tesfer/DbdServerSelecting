@@ -410,6 +410,7 @@ namespace SelectRegionForDbd
             btnRemoveRules.TabIndex = 33;
             btnRemoveRules.Text = "Remove Rules";
             btnRemoveRules.UseVisualStyleBackColor = true;
+            btnRemoveRules.Click += btnRemoveRules_Click;
             // 
             // btnCreateRules
             // 
@@ -420,6 +421,7 @@ namespace SelectRegionForDbd
             btnCreateRules.TabIndex = 34;
             btnCreateRules.Text = "Create Rules";
             btnCreateRules.UseVisualStyleBackColor = true;
+            btnCreateRules.Click += btnCreateRules_Click;
             // 
             // label1
             // 
