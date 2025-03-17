@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Drawing;
 using System.Net;
@@ -49,13 +50,11 @@ namespace SelectRegionForDbd
 
         private bool RunPowerShellCommand(string command)
         {
-            // Путь к PowerShell
-            string powerShellPath = @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe";
             try
             {
                 ProcessStartInfo pro = new ProcessStartInfo
                 {
-                    FileName = powerShellPath,
+                    FileName = "powershell.exe",
                     Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{command}\"",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -101,8 +100,19 @@ namespace SelectRegionForDbd
         private async Task SaveIps(string excludedRegion)
         {
             string url = "https://ip-ranges.amazonaws.com/ip-ranges.json";
-            string filePathIn = "IP_ranges_in.txt";  // Путь к файлу, где будут сохранены IP-адреса
-            string filePathOut = "IP_ranges_out.txt";  // Путь к файлу, где будут сохранены IP-адреса
+            // string filePathIn = "IP_ranges_in.txt";
+            // string filePathOut = "IP_ranges_out.txt"; 
+            string scriptPathIn = "firewall_in.ps1";
+            string scriptPathOut = "firewall_out.ps1";
+            // Список разрешенных регионов
+            HashSet<string> allowedRegions = new HashSet<string>
+            {
+                "us-east-2", "us-east-1", "us-west-1", "us-west-2",
+                "ap-south-1", "ap-northeast-2", "ap-southeast-1", "ap-southeast-2",
+                "ap-northeast-1", "ca-central-1", "eu-central-1", "eu-west-1",
+                "eu-west-2", "sa-east-1"
+            };
+
             try
             {
                 using HttpClient client = new HttpClient();
@@ -112,14 +122,14 @@ namespace SelectRegionForDbd
                 // Получаем массив IP-диапазонов
                 var prefixes = doc.RootElement.GetProperty("prefixes");
 
-                // Список для хранения всех IP-адресов
                 List<string> allIps = new List<string>();
 
-                // Проходим по всем элементам и фильтруем по регионам
                 foreach (var entry in prefixes.EnumerateArray())
                 {
                     string region = entry.GetProperty("region").GetString()!;
-                    if (region != excludedRegion)  // Исключаем указанный регион
+
+                    // Если регион в списке разрешенных и не исключен
+                    if (allowedRegions.Contains(region) && region != excludedRegion)
                     {
                         // Проверяем, что есть поле ip_prefix и оно соответствует IPv4
                         if (entry.TryGetProperty("ip_prefix", out var ipPrefix) && ipPrefix.GetString()?.Contains(".") == true)
@@ -128,7 +138,6 @@ namespace SelectRegionForDbd
                         }
                     }
                 }
-
                 // Собираем все IP-адреса в строку
                 string resultIn = string.Join(",", allIps);
                 string resultOut = string.Join(",", allIps);
@@ -139,14 +148,14 @@ namespace SelectRegionForDbd
                 resultIn = ruleIn + resultIn;
                 resultOut = ruleOut + resultOut;
                 // Сохраняем в файл
-                await File.WriteAllTextAsync(filePathIn, resultIn);
-                await File.WriteAllTextAsync(filePathOut, resultOut);
-                // Читаем команды из файлов
-                string commandIn = File.ReadAllText(filePathIn);
-                string commandOut = File.ReadAllText(filePathOut);
-                // Выполнение команд
-                bool resultInCommand = RunPowerShellCommand(commandIn);
-                bool resultOutCommand = RunPowerShellCommand(commandOut);
+                // await File.WriteAllTextAsync(filePathIn, resultIn);
+                // await File.WriteAllTextAsync(filePathOut, resultOut);
+                // Сохраняем команды в скрипты
+                await File.WriteAllTextAsync(scriptPathIn, resultIn);
+                await File.WriteAllTextAsync(scriptPathOut, resultOut);
+
+                bool resultInCommand = RunPowerShellScript(scriptPathIn);
+                bool resultOutCommand = RunPowerShellScript(scriptPathOut);
 
                 if (resultInCommand && resultOutCommand)
                 {
@@ -154,8 +163,10 @@ namespace SelectRegionForDbd
                     FlushDnsCache();
                     CheckFirewallRule(Status);
                     // Удаляем файлы после выполнения
-                    if (File.Exists(filePathIn)) File.Delete(filePathIn);
-                    if (File.Exists(filePathOut)) File.Delete(filePathOut);
+                    // if (File.Exists(filePathIn)) File.Delete(filePathIn);
+                    // if (File.Exists(filePathOut)) File.Delete(filePathOut);
+                    if (File.Exists(scriptPathIn)) File.Delete(scriptPathIn);
+                    if (File.Exists(scriptPathOut)) File.Delete(scriptPathOut);
                 }
                 else
                 {
@@ -171,6 +182,47 @@ namespace SelectRegionForDbd
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
         }
+
+        private bool RunPowerShellScript(string scriptPath)
+        {
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -File \"{scriptPath}\"",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                Verb = "runas" // Запуск от имени администратора
+            };
+
+            try
+            {
+                using (Process process = Process.Start(psi)!)
+                {
+                    if (process != null)
+                    {
+                        string output = process.StandardOutput.ReadToEnd();
+                        string error = process.StandardError.ReadToEnd();
+                        process.WaitForExit();
+
+                        if (!string.IsNullOrWhiteSpace(error))
+                        {
+                            return false;
+                        }
+
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+
+            return false;
+        }
+
 
         private void FlushDnsCache()
         {
