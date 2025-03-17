@@ -373,6 +373,7 @@ namespace SelectRegionForDbd
             // 
             // btnSelectFile
             // 
+            btnSelectFile.FlatStyle = FlatStyle.Flat;
             btnSelectFile.Font = new Font("Verdana", 12F);
             btnSelectFile.Location = new Point(856, 375);
             btnSelectFile.Name = "btnSelectFile";
@@ -386,7 +387,7 @@ namespace SelectRegionForDbd
             // 
             StatusLabel.AutoSize = true;
             StatusLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            StatusLabel.Location = new Point(432, 600);
+            StatusLabel.Location = new Point(432, 625);
             StatusLabel.Name = "StatusLabel";
             StatusLabel.Size = new Size(68, 23);
             StatusLabel.TabIndex = 31;
@@ -396,7 +397,7 @@ namespace SelectRegionForDbd
             // 
             Status.AutoSize = true;
             Status.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            Status.Location = new Point(496, 600);
+            Status.Location = new Point(496, 625);
             Status.Name = "Status";
             Status.Size = new Size(42, 23);
             Status.TabIndex = 32;
@@ -404,6 +405,7 @@ namespace SelectRegionForDbd
             // 
             // btnRemoveRules
             // 
+            btnRemoveRules.FlatStyle = FlatStyle.Popup;
             btnRemoveRules.Font = new Font("Verdana", 12F);
             btnRemoveRules.Location = new Point(12, 599);
             btnRemoveRules.Name = "btnRemoveRules";
@@ -415,6 +417,7 @@ namespace SelectRegionForDbd
             // 
             // btnCreateRules
             // 
+            btnCreateRules.FlatStyle = FlatStyle.Popup;
             btnCreateRules.Font = new Font("Verdana", 12F);
             btnCreateRules.Location = new Point(847, 599);
             btnCreateRules.Name = "btnCreateRules";
@@ -437,6 +440,7 @@ namespace SelectRegionForDbd
             // ServersBox
             // 
             ServersBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            ServersBox.FlatStyle = FlatStyle.Popup;
             ServersBox.Font = new Font("Verdana", 12F);
             ServersBox.FormattingEnabled = true;
             ServersBox.Items.AddRange(new object[] { "eu-central-1", "eu-west-1", "eu-west-2", "us-east-1", "us-east-2", "us-west-1", "us-west-2", "ca-central-1", "ap-south-1", "ap-northeast-1", "ap-northeast-2", "ap-southeast-1", "ap-southeast-2", "sa-east-1" });

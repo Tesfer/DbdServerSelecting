@@ -17,6 +17,7 @@ namespace SelectRegionForDbd
         public MainForm()
         {
             InitializeComponent();
+            Themes.Dark(this, btnCreateRules, btnRemoveRules, btnSelectFile, FilePath, ServersBox);
             GetPing();
             CheckFirewallRule(Status);
             FilePath.Select(0, 0);
