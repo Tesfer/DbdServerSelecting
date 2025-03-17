@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Drawing;
@@ -6,6 +7,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Security.Policy;
 using System.Text.Json;
+using System.Threading;
 
 namespace SelectRegionForDbd
 {
@@ -14,18 +16,45 @@ namespace SelectRegionForDbd
         public MainForm()
         {
             InitializeComponent();
+            GetPing("gamelift.eu-central-1.amazonaws.com", FrankfurtPing);
+            GetPing("gamelift.eu-west-1.amazonaws.com", IrelandPing);
+
+            GetPing("gamelift.us-east-1.amazonaws.com", VirginiaPing);
+
             CheckFirewallRule(Status);
             FilePath.Select(0, 0);
+        }
+
+        private async void GetPing(string host, Label label)
+        {
+            int port = 443;
+            Stopwatch stopwatch = new Stopwatch();
+            try
+            {
+                using (TcpClient client = new TcpClient())
+                {
+                    stopwatch.Start();
+                    await client.ConnectAsync(host, port);
+                    stopwatch.Stop();
+
+                    label.Text = $"{stopwatch.ElapsedMilliseconds} ms";
+                    label.ForeColor = stopwatch.ElapsedMilliseconds < 100 ? Color.Green :
+                                      stopwatch.ElapsedMilliseconds < 200 ? Color.Orange : Color.Red;
+                }
+            }
+            catch (Exception)
+            {
+                label.Text = "Error";
+                label.ForeColor = Color.Red;
+            }
         }
 
         private void CheckFirewallRule(Label label)
         {
             try
             {
-                //  оманды дл€ проверки наличи€ правил по именам
                 string powerShellCommandInBound = "Get-NetFirewallRule | Where-Object { $_.DisplayName -eq 'DbdBlockRule_IN' } | Select-Object -First 1";
                 string powerShellCommandOutBound = "Get-NetFirewallRule | Where-Object { $_.DisplayName -eq 'DbdBlockRule_OUT' } | Select-Object -First 1";
-                // ѕроверка наличи€ правил
                 bool resultInBound = RunPowerShellCommand(powerShellCommandInBound);
                 bool resultOutBound = RunPowerShellCommand(powerShellCommandOutBound);
                 if (resultInBound && resultOutBound)
@@ -82,16 +111,12 @@ namespace SelectRegionForDbd
 
         private void DeleteRules()
         {
-            //  оманды дл€ удалени€ правил
             string powerShellCommandInBound = "Remove-NetFirewallRule -DisplayName 'DbdBlockRule_IN'";
             string powerShellCommandOutBound = "Remove-NetFirewallRule -DisplayName 'DbdBlockRule_OUT'";
-            // ¬ыполнение команд дл€ удалени€ правил
             bool resultInBound = RunPowerShellCommand(powerShellCommandInBound);
             bool resultOutBound = RunPowerShellCommand(powerShellCommandOutBound);
-            // ƒополнительно провер€ем, что правила действительно удалены
             bool isInBoundRuleRemoved = !IsRulePresent("DbdBlockRule_IN");
             bool isOutBoundRuleRemoved = !IsRulePresent("DbdBlockRule_OUT");
-            // ѕровер€ем, были ли удалены правила
             if (isInBoundRuleRemoved && isOutBoundRuleRemoved)
             {
                 MessageBox.Show("Rules have been successfully removed");
