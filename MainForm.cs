@@ -13,8 +13,69 @@ namespace SelectRegionForDbd
         public MainForm()
         {
             InitializeComponent();
+            CheckFirewallRule(Status);
             FilePath.Select(0, 0);
         }
+
+        private void CheckFirewallRule(Label label)
+        {
+            try
+            {
+                string powerShellCommandInBound = $"Get-NetFirewallRule | Where-Object {{ $_.DisplayName -eq 'DbdBlockRule_IN' }}";
+                string powerShellCommandOutBound = $"Get-NetFirewallRule | Where-Object {{ $_.DisplayName -eq 'DbdBlockRule_OUT' }}";
+
+                bool resultInBound = RunPowerShellCommand(powerShellCommandInBound);
+                bool resultOutBound = RunPowerShellCommand(powerShellCommandOutBound);
+
+                if (resultInBound && resultOutBound)
+                {
+                    label.Text = "Rules found";
+                    label.ForeColor = Color.Red;
+                }
+                else
+                {
+                    label.Text = "There are no rules";
+                    label.ForeColor = Color.Green;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при проверке правила: {ex.Message}");
+            }
+        }
+
+        private bool RunPowerShellCommand(string command)
+        {
+            try
+            {
+                // Запускаем PowerShell команду через Process
+                ProcessStartInfo pro = new ProcessStartInfo();
+                pro.FileName = "powershell.exe";
+                pro.Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{command}\""; // Для отключения профиля и политики
+                pro.RedirectStandardOutput = true;
+                pro.UseShellExecute = false;
+                pro.CreateNoWindow = true;
+
+                using (Process process = Process.Start(pro)!)
+                {
+                    // Чтение результата выполнения PowerShell команды
+                    using (System.IO.StreamReader reader = process.StandardOutput)
+                    {
+                        string result = reader.ReadToEnd();
+                        process.WaitForExit();  // Дожидаемся завершения процесса PowerShell
+
+                        // Если результат не пустой, возвращаем true
+                        return !string.IsNullOrEmpty(result);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при выполнении команды PowerShell: {ex.Message}");
+                return false;
+            }
+        }
+
 
         private async Task<string?> GetSingleIpForRegion(string region)
         {

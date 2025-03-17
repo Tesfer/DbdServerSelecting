@@ -59,9 +59,15 @@ namespace SelectRegionForDbd
             PauloLabel = new Label();
             PauloPing = new Label();
             openFileDialog = new OpenFileDialog();
-            label1 = new Label();
+            PathLabel = new Label();
             FilePath = new TextBox();
             btnSelectFile = new Button();
+            StatusLabel = new Label();
+            Status = new Label();
+            btnRemoveRules = new Button();
+            btnCreateRules = new Button();
+            label1 = new Label();
+            ServersBox = new ComboBox();
             SuspendLayout();
             // 
             // FrankfurtLabel
@@ -344,15 +350,15 @@ namespace SelectRegionForDbd
             PauloPing.TabIndex = 27;
             PauloPing.Text = "ping";
             // 
-            // label1
+            // PathLabel
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Verdana", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label1.Location = new Point(311, 350);
-            label1.Name = "label1";
-            label1.Size = new Size(378, 18);
-            label1.TabIndex = 28;
-            label1.Text = "Путь до DeadByDaylight-Win64-Shipping.exe";
+            PathLabel.AutoSize = true;
+            PathLabel.Font = new Font("Verdana", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            PathLabel.Location = new Point(312, 350);
+            PathLabel.Name = "PathLabel";
+            PathLabel.Size = new Size(375, 18);
+            PathLabel.TabIndex = 28;
+            PathLabel.Text = "Path to DeadByDaylight-Win64-Shipping.exe";
             // 
             // FilePath
             // 
@@ -371,18 +377,85 @@ namespace SelectRegionForDbd
             btnSelectFile.Name = "btnSelectFile";
             btnSelectFile.Size = new Size(100, 27);
             btnSelectFile.TabIndex = 30;
-            btnSelectFile.Text = "Выбрать";
+            btnSelectFile.Text = "Choose";
             btnSelectFile.UseVisualStyleBackColor = true;
             btnSelectFile.Click += btnSelectFile_Click;
+            // 
+            // StatusLabel
+            // 
+            StatusLabel.AutoSize = true;
+            StatusLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            StatusLabel.Location = new Point(432, 600);
+            StatusLabel.Name = "StatusLabel";
+            StatusLabel.Size = new Size(68, 23);
+            StatusLabel.TabIndex = 31;
+            StatusLabel.Text = "Status:";
+            // 
+            // Status
+            // 
+            Status.AutoSize = true;
+            Status.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            Status.Location = new Point(496, 600);
+            Status.Name = "Status";
+            Status.Size = new Size(42, 23);
+            Status.TabIndex = 32;
+            Status.Text = "Get";
+            // 
+            // btnRemoveRules
+            // 
+            btnRemoveRules.Font = new Font("Verdana", 12F);
+            btnRemoveRules.Location = new Point(12, 599);
+            btnRemoveRules.Name = "btnRemoveRules";
+            btnRemoveRules.Size = new Size(125, 50);
+            btnRemoveRules.TabIndex = 33;
+            btnRemoveRules.Text = "Remove Rules";
+            btnRemoveRules.UseVisualStyleBackColor = true;
+            // 
+            // btnCreateRules
+            // 
+            btnCreateRules.Font = new Font("Verdana", 12F);
+            btnCreateRules.Location = new Point(847, 599);
+            btnCreateRules.Name = "btnCreateRules";
+            btnCreateRules.Size = new Size(125, 50);
+            btnCreateRules.TabIndex = 34;
+            btnCreateRules.Text = "Create Rules";
+            btnCreateRules.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Verdana", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label1.Location = new Point(393, 425);
+            label1.Name = "label1";
+            label1.Size = new Size(213, 18);
+            label1.TabIndex = 35;
+            label1.Text = "Select the desired server";
+            // 
+            // ServersBox
+            // 
+            ServersBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            ServersBox.Font = new Font("Verdana", 12F);
+            ServersBox.FormattingEnabled = true;
+            ServersBox.Items.AddRange(new object[] { "eu-central-1", "eu-north-1\t\t", "eu-south-1\t\t", "eu-west-1", "eu-west-2\t", "eu-west-3\t", "us-east-1", "us-east-2", "us-west-1\t", "us-west-2\t\t", "ap-east-1", "ap-northeast-1", "ap-northeast-2", "ap-northeast-3\t\t", "ap-south-1\t", "ap-southeast-1", "ap-southeast-2", "ca-central-1\t", "me-south-1", "af-south-1\t\t\t", "sa-east-1" });
+            ServersBox.Location = new Point(250, 450);
+            ServersBox.Name = "ServersBox";
+            ServersBox.Size = new Size(500, 26);
+            ServersBox.TabIndex = 36;
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(984, 661);
+            Controls.Add(ServersBox);
+            Controls.Add(label1);
+            Controls.Add(btnCreateRules);
+            Controls.Add(btnRemoveRules);
+            Controls.Add(Status);
+            Controls.Add(StatusLabel);
             Controls.Add(btnSelectFile);
             Controls.Add(FilePath);
-            Controls.Add(label1);
+            Controls.Add(PathLabel);
             Controls.Add(PauloPing);
             Controls.Add(PauloLabel);
             Controls.Add(OregonPing);
@@ -453,8 +526,14 @@ namespace SelectRegionForDbd
         private Label PauloLabel;
         private Label PauloPing;
         private OpenFileDialog openFileDialog;
-        private Label label1;
+        private Label PathLabel;
         private TextBox FilePath;
         private Button btnSelectFile;
+        private Label StatusLabel;
+        private Label Status;
+        private Button btnRemoveRules;
+        private Button btnCreateRules;
+        private Label label1;
+        private ComboBox ServersBox;
     }
 }
