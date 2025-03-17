@@ -16,13 +16,27 @@ namespace SelectRegionForDbd
         public MainForm()
         {
             InitializeComponent();
-            GetPing("gamelift.eu-central-1.amazonaws.com", FrankfurtPing);
-            GetPing("gamelift.eu-west-1.amazonaws.com", IrelandPing);
-
-            GetPing("gamelift.us-east-1.amazonaws.com", VirginiaPing);
-
+            Hideping();
             CheckFirewallRule(Status);
             FilePath.Select(0, 0);
+        }
+
+        private void Hideping()
+        {
+            FrankfurtPing.Visible = false;
+            IrelandPing.Visible = false;
+            LondonPing.Visible = false;
+            CentralPing.Visible = false;
+            MumbaiPing.Visible = false;
+            SeoulPing.Visible = false;
+            SingaporePing.Visible = false;
+            SydneyPing.Visible = false;
+            TokyoPing.Visible = false;
+            OhioPing.Visible = false;
+            VirginiaPing.Visible = false;
+            CaliforniaPing.Visible = false;
+            OregonPing.Visible = false;
+            PauloPing.Visible = false;
         }
 
         private async void GetPing(string host, Label label)
@@ -33,6 +47,10 @@ namespace SelectRegionForDbd
             {
                 using (TcpClient client = new TcpClient())
                 {
+                    // Устанавливаем таймаут на 5 секунд
+                    client.SendTimeout = 5000;
+                    client.ReceiveTimeout = 5000;
+
                     stopwatch.Start();
                     await client.ConnectAsync(host, port);
                     stopwatch.Stop();
@@ -48,7 +66,6 @@ namespace SelectRegionForDbd
                 label.ForeColor = Color.Red;
             }
         }
-
         private void CheckFirewallRule(Label label)
         {
             try
