@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using System.Security.Policy;
 using System.Text.Json;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace SelectRegionForDbd
 {
@@ -16,55 +17,54 @@ namespace SelectRegionForDbd
         public MainForm()
         {
             InitializeComponent();
-            Hideping();
+            GetPing();
             CheckFirewallRule(Status);
             FilePath.Select(0, 0);
         }
 
-        private void Hideping()
+        private async void Ping(string host, Label label)
         {
-            FrankfurtPing.Visible = false;
-            IrelandPing.Visible = false;
-            LondonPing.Visible = false;
-            CentralPing.Visible = false;
-            MumbaiPing.Visible = false;
-            SeoulPing.Visible = false;
-            SingaporePing.Visible = false;
-            SydneyPing.Visible = false;
-            TokyoPing.Visible = false;
-            OhioPing.Visible = false;
-            VirginiaPing.Visible = false;
-            CaliforniaPing.Visible = false;
-            OregonPing.Visible = false;
-            PauloPing.Visible = false;
-        }
-
-        private async void GetPing(string host, Label label)
-        {
-            int port = 443;
-            Stopwatch stopwatch = new Stopwatch();
             try
             {
-                using (TcpClient client = new TcpClient())
+                using (Ping ping = new Ping())
                 {
-                    // Устанавливаем таймаут на 5 секунд
-                    client.SendTimeout = 5000;
-                    client.ReceiveTimeout = 5000;
-
-                    stopwatch.Start();
-                    await client.ConnectAsync(host, port);
-                    stopwatch.Stop();
-
-                    label.Text = $"{stopwatch.ElapsedMilliseconds} ms";
-                    label.ForeColor = stopwatch.ElapsedMilliseconds < 100 ? Color.Green :
-                                      stopwatch.ElapsedMilliseconds < 200 ? Color.Orange : Color.Red;
+                    PingReply reply = await ping.SendPingAsync(host);
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        label.Text = $"{reply.RoundtripTime} ms";
+                        label.ForeColor = reply.RoundtripTime < 100 ? Color.Green :
+                                          reply.RoundtripTime < 200 ? Color.Orange : Color.Red;
+                    }
+                    else
+                    {
+                        label.Text = "-1";
+                        label.ForeColor = Color.Red;
+                    }
                 }
             }
-            catch (Exception)
+            catch
             {
                 label.Text = "Error";
                 label.ForeColor = Color.Red;
             }
+        }
+
+        private void GetPing()
+        {
+            Ping("gamelift.eu-central-1.amazonaws.com", FrankfurtPing);
+            Ping("gamelift.eu-west-1.amazonaws.com", IrelandPing);
+            Ping("gamelift.eu-west-2.amazonaws.com", LondonPing);
+            Ping("gamelift.ca-central-1.amazonaws.com", CentralPing);
+            Ping("gamelift.ap-south-1.amazonaws.com", MumbaiPing);
+            Ping("gamelift.ap-northeast-2.amazonaws.com", SeoulPing);
+            Ping("gamelift.ap-southeast-1.amazonaws.com", SingaporePing);
+            Ping("gamelift.ap-southeast-2.amazonaws.com", SydneyPing);
+            Ping("gamelift.ap-northeast-1.amazonaws.com", TokyoPing);
+            Ping("gamelift.us-east-2.amazonaws.com", OhioPing);
+            Ping("gamelift.us-east-1.amazonaws.com", VirginiaPing);
+            Ping("gamelift.us-west-1.amazonaws.com", CaliforniaPing);
+            Ping("gamelift.us-west-2.amazonaws.com", OregonPing);
+            Ping("gamelift.sa-east-1.amazonaws.com", PauloPing);
         }
         private void CheckFirewallRule(Label label)
         {
@@ -138,6 +138,7 @@ namespace SelectRegionForDbd
             {
                 MessageBox.Show("Rules have been successfully removed");
                 FlushDnsCache();
+                GetPing();
                 CheckFirewallRule(Status);
             }
             else
@@ -207,6 +208,7 @@ namespace SelectRegionForDbd
                 {
                     MessageBox.Show("Rules have been successfully added");
                     FlushDnsCache();
+                    GetPing();
                     CheckFirewallRule(Status);
                     // Удаляем файлы после выполнения
                     // if (File.Exists(filePathIn)) File.Delete(filePathIn);

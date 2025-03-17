@@ -254,7 +254,7 @@ namespace SelectRegionForDbd
             // 
             OhioLabel.AutoSize = true;
             OhioLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            OhioLabel.Location = new Point(625, 50);
+            OhioLabel.Location = new Point(625, 100);
             OhioLabel.Name = "OhioLabel";
             OhioLabel.Size = new Size(136, 23);
             OhioLabel.TabIndex = 18;
@@ -264,7 +264,7 @@ namespace SelectRegionForDbd
             // 
             OhioPing.AutoSize = true;
             OhioPing.Font = new Font("MuseoSansEx 500", 14.25F);
-            OhioPing.Location = new Point(767, 50);
+            OhioPing.Location = new Point(767, 100);
             OhioPing.Name = "OhioPing";
             OhioPing.Size = new Size(48, 23);
             OhioPing.TabIndex = 19;
@@ -274,7 +274,7 @@ namespace SelectRegionForDbd
             // 
             VirginiaLabel.AutoSize = true;
             VirginiaLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            VirginiaLabel.Location = new Point(625, 100);
+            VirginiaLabel.Location = new Point(625, 50);
             VirginiaLabel.Name = "VirginiaLabel";
             VirginiaLabel.Size = new Size(181, 23);
             VirginiaLabel.TabIndex = 20;
@@ -284,7 +284,7 @@ namespace SelectRegionForDbd
             // 
             VirginiaPing.AutoSize = true;
             VirginiaPing.Font = new Font("MuseoSansEx 500", 14.25F);
-            VirginiaPing.Location = new Point(812, 100);
+            VirginiaPing.Location = new Point(812, 50);
             VirginiaPing.Name = "VirginiaPing";
             VirginiaPing.Size = new Size(48, 23);
             VirginiaPing.TabIndex = 21;
