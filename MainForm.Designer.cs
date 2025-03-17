@@ -438,7 +438,7 @@ namespace SelectRegionForDbd
             ServersBox.DropDownStyle = ComboBoxStyle.DropDownList;
             ServersBox.Font = new Font("Verdana", 12F);
             ServersBox.FormattingEnabled = true;
-            ServersBox.Items.AddRange(new object[] { "eu-central-1", "eu-west-1", "eu-west-2", "us-east-1", "us-east-2", "us-west-1", "us-west-2", "ca-central-1", "ap-south-1", "ap-northeast-1", "ap-northeast-2", "ap-southeast-1", "ap-southeast-2", "sa-east-1" });
+            ServersBox.Items.AddRange(new object[] { "eu-central-1", "eu-west-1", "eu-west-2", "us-east-2", "us-west-1", "us-west-2", "ca-central-1", "ap-south-1", "ap-northeast-1", "ap-northeast-2", "ap-southeast-1", "ap-southeast-2", "sa-east-1" });
             ServersBox.Location = new Point(250, 450);
             ServersBox.Name = "ServersBox";
             ServersBox.Size = new Size(500, 26);
