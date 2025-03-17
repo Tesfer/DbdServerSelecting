@@ -373,6 +373,7 @@ namespace SelectRegionForDbd
             Controls.Add(IrelandLabel);
             Controls.Add(FrankfurtPing);
             Controls.Add(FrankfurtLabel);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
