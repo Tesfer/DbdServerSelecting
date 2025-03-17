@@ -46,6 +46,18 @@ namespace SelectRegionForDbd
             SydneyPing = new Label();
             TokyoLabel = new Label();
             TokyoPing = new Label();
+            CentralLabel = new Label();
+            CentralPing = new Label();
+            OhioLabel = new Label();
+            OhioPing = new Label();
+            VirginiaLabel = new Label();
+            VirginiaPing = new Label();
+            CaliforniaLabel = new Label();
+            CaliforniaPing = new Label();
+            OregonLabel = new Label();
+            OregonPing = new Label();
+            PauloLabel = new Label();
+            PauloPing = new Label();
             SuspendLayout();
             // 
             // FrankfurtLabel
@@ -208,11 +220,143 @@ namespace SelectRegionForDbd
             TokyoPing.TabIndex = 15;
             TokyoPing.Text = "ping";
             // 
+            // CentralLabel
+            // 
+            CentralLabel.AutoSize = true;
+            CentralLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            CentralLabel.Location = new Point(50, 250);
+            CentralLabel.Name = "CentralLabel";
+            CentralLabel.Size = new Size(158, 23);
+            CentralLabel.TabIndex = 16;
+            CentralLabel.Text = "Canada (Central)";
+            // 
+            // CentralPing
+            // 
+            CentralPing.AutoSize = true;
+            CentralPing.Font = new Font("MuseoSansEx 500", 14.25F);
+            CentralPing.Location = new Point(214, 250);
+            CentralPing.Name = "CentralPing";
+            CentralPing.Size = new Size(48, 23);
+            CentralPing.TabIndex = 17;
+            CentralPing.Text = "ping";
+            // 
+            // OhioLabel
+            // 
+            OhioLabel.AutoSize = true;
+            OhioLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            OhioLabel.Location = new Point(625, 50);
+            OhioLabel.Name = "OhioLabel";
+            OhioLabel.Size = new Size(136, 23);
+            OhioLabel.TabIndex = 18;
+            OhioLabel.Text = "US East (Ohio)";
+            // 
+            // OhioPing
+            // 
+            OhioPing.AutoSize = true;
+            OhioPing.Font = new Font("MuseoSansEx 500", 14.25F);
+            OhioPing.Location = new Point(767, 50);
+            OhioPing.Name = "OhioPing";
+            OhioPing.Size = new Size(48, 23);
+            OhioPing.TabIndex = 19;
+            OhioPing.Text = "ping";
+            // 
+            // VirginiaLabel
+            // 
+            VirginiaLabel.AutoSize = true;
+            VirginiaLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            VirginiaLabel.Location = new Point(625, 100);
+            VirginiaLabel.Name = "VirginiaLabel";
+            VirginiaLabel.Size = new Size(181, 23);
+            VirginiaLabel.TabIndex = 20;
+            VirginiaLabel.Text = "US East (N. Virginia)";
+            // 
+            // VirginiaPing
+            // 
+            VirginiaPing.AutoSize = true;
+            VirginiaPing.Font = new Font("MuseoSansEx 500", 14.25F);
+            VirginiaPing.Location = new Point(812, 100);
+            VirginiaPing.Name = "VirginiaPing";
+            VirginiaPing.Size = new Size(48, 23);
+            VirginiaPing.TabIndex = 21;
+            VirginiaPing.Text = "ping";
+            // 
+            // CaliforniaLabel
+            // 
+            CaliforniaLabel.AutoSize = true;
+            CaliforniaLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            CaliforniaLabel.Location = new Point(625, 150);
+            CaliforniaLabel.Name = "CaliforniaLabel";
+            CaliforniaLabel.Size = new Size(208, 23);
+            CaliforniaLabel.TabIndex = 22;
+            CaliforniaLabel.Text = "US West (N. California)";
+            // 
+            // CaliforniaPing
+            // 
+            CaliforniaPing.AutoSize = true;
+            CaliforniaPing.Font = new Font("MuseoSansEx 500", 14.25F);
+            CaliforniaPing.Location = new Point(839, 150);
+            CaliforniaPing.Name = "CaliforniaPing";
+            CaliforniaPing.Size = new Size(48, 23);
+            CaliforniaPing.TabIndex = 23;
+            CaliforniaPing.Text = "ping";
+            // 
+            // OregonLabel
+            // 
+            OregonLabel.AutoSize = true;
+            OregonLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            OregonLabel.Location = new Point(625, 200);
+            OregonLabel.Name = "OregonLabel";
+            OregonLabel.Size = new Size(166, 23);
+            OregonLabel.TabIndex = 24;
+            OregonLabel.Text = "US West (Oregon)";
+            // 
+            // OregonPing
+            // 
+            OregonPing.AutoSize = true;
+            OregonPing.Font = new Font("MuseoSansEx 500", 14.25F);
+            OregonPing.Location = new Point(797, 200);
+            OregonPing.Name = "OregonPing";
+            OregonPing.Size = new Size(48, 23);
+            OregonPing.TabIndex = 25;
+            OregonPing.Text = "ping";
+            // 
+            // PauloLabel
+            // 
+            PauloLabel.AutoSize = true;
+            PauloLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            PauloLabel.Location = new Point(625, 250);
+            PauloLabel.Name = "PauloLabel";
+            PauloLabel.Size = new Size(241, 23);
+            PauloLabel.TabIndex = 26;
+            PauloLabel.Text = "South America (Sao Paulo)";
+            // 
+            // PauloPing
+            // 
+            PauloPing.AutoSize = true;
+            PauloPing.Font = new Font("MuseoSansEx 500", 14.25F);
+            PauloPing.Location = new Point(872, 250);
+            PauloPing.Name = "PauloPing";
+            PauloPing.Size = new Size(48, 23);
+            PauloPing.TabIndex = 27;
+            PauloPing.Text = "ping";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(984, 661);
+            Controls.Add(PauloPing);
+            Controls.Add(PauloLabel);
+            Controls.Add(OregonPing);
+            Controls.Add(OregonLabel);
+            Controls.Add(CaliforniaPing);
+            Controls.Add(CaliforniaLabel);
+            Controls.Add(VirginiaPing);
+            Controls.Add(VirginiaLabel);
+            Controls.Add(OhioPing);
+            Controls.Add(OhioLabel);
+            Controls.Add(CentralPing);
+            Controls.Add(CentralLabel);
             Controls.Add(TokyoPing);
             Controls.Add(TokyoLabel);
             Controls.Add(SydneyPing);
@@ -257,5 +401,17 @@ namespace SelectRegionForDbd
         private Label SydneyPing;
         private Label TokyoLabel;
         private Label TokyoPing;
+        private Label CentralLabel;
+        private Label CentralPing;
+        private Label OhioLabel;
+        private Label OhioPing;
+        private Label VirginiaLabel;
+        private Label VirginiaPing;
+        private Label CaliforniaLabel;
+        private Label CaliforniaPing;
+        private Label OregonLabel;
+        private Label OregonPing;
+        private Label PauloLabel;
+        private Label PauloPing;
     }
 }
