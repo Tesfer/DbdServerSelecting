@@ -274,6 +274,7 @@ namespace SelectRegionForDbd
             // 
             VirginiaLabel.AutoSize = true;
             VirginiaLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            VirginiaLabel.ForeColor = SystemColors.ControlDarkDark;
             VirginiaLabel.Location = new Point(625, 50);
             VirginiaLabel.Name = "VirginiaLabel";
             VirginiaLabel.Size = new Size(181, 23);
