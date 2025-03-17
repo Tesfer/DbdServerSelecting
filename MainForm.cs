@@ -25,12 +25,9 @@ namespace SelectRegionForDbd
                 // Команды для проверки наличия правил по именам
                 string powerShellCommandInBound = "Get-NetFirewallRule | Where-Object { $_.DisplayName -eq 'DbdBlockRule_IN' } | Select-Object -First 1";
                 string powerShellCommandOutBound = "Get-NetFirewallRule | Where-Object { $_.DisplayName -eq 'DbdBlockRule_OUT' } | Select-Object -First 1";
-
                 // Проверка наличия правил
                 bool resultInBound = RunPowerShellCommand(powerShellCommandInBound);
                 bool resultOutBound = RunPowerShellCommand(powerShellCommandOutBound);
-
-                // Обновляем текст Label в зависимости от результатов
                 if (resultInBound && resultOutBound)
                 {
                     label.Text = "Rules are found";
@@ -60,29 +57,16 @@ namespace SelectRegionForDbd
                     RedirectStandardError = true,
                     UseShellExecute = false,
                     CreateNoWindow = true,
-                    Verb = "runas"  // Запуск с правами администратора
+                    Verb = "runas"
                 };
 
                 using (Process process = Process.Start(pro)!)
                 {
-                    // Чтение ошибок
-                    string error = process.StandardError.ReadToEnd();
-
                     if (process == null) return false;
-
-                    // Чтение результата выполнения PowerShell команды
                     using (System.IO.StreamReader reader = process.StandardOutput)
                     {
-                        string result = reader.ReadToEnd();  // Получаем весь вывод
-                        process.WaitForExit();  // Дожидаемся завершения процесса
-
-                        if (!string.IsNullOrEmpty(error))
-                        {
-                            string log = "PowerShellLog.txt";
-                            File.WriteAllTextAsync(log, error);
-                        }
-
-                        // Если результат пустой, это значит, что правило не найдено
+                        string result = reader.ReadToEnd();
+                        process.WaitForExit();
                         return !string.IsNullOrEmpty(result);
                     }
                 }
@@ -90,14 +74,37 @@ namespace SelectRegionForDbd
             catch (Exception ex)
             {
                 // Путь к логам
-                string logPath = "PowerShellMainLog.txt";
-
+                string logPath = "PowerShellLog.txt";
                 File.WriteAllTextAsync(logPath, ex.Message);
                 return false;
             }
         }
 
-        private async Task SaveIps(string excludedRegion)
+        private void DeleteRules()
+        {
+            // Команды для удаления правил
+            string powerShellCommandInBound = "Remove-NetFirewallRule -DisplayName 'DbdBlockRule_IN'";
+            string powerShellCommandOutBound = "Remove-NetFirewallRule -DisplayName 'DbdBlockRule_OUT'";
+            // Выполнение команд для удаления правил
+            bool resultInBound = RunPowerShellCommand(powerShellCommandInBound);
+            bool resultOutBound = RunPowerShellCommand(powerShellCommandOutBound);
+            // Дополнительно проверяем, что правила действительно удалены
+            bool isInBoundRuleRemoved = !IsRulePresent("DbdBlockRule_IN");
+            bool isOutBoundRuleRemoved = !IsRulePresent("DbdBlockRule_OUT");
+            // Проверяем, были ли удалены правила
+            if (isInBoundRuleRemoved && isOutBoundRuleRemoved)
+            {
+                MessageBox.Show("Rules have been successfully removed");
+                FlushDnsCache();
+                CheckFirewallRule(Status);
+            }
+            else
+            {
+                MessageBox.Show("Rules not found or could not be removed");
+            }
+        }
+
+        private async Task CreateRules(string excludedRegion)
         {
             string url = "https://ip-ranges.amazonaws.com/ip-ranges.json";
             // string filePathIn = "IP_ranges_in.txt";
@@ -118,12 +125,9 @@ namespace SelectRegionForDbd
                 using HttpClient client = new HttpClient();
                 string json = await client.GetStringAsync(url);  // Получаем JSON-строку
                 using JsonDocument doc = JsonDocument.Parse(json);  // Парсим JSON
-
                 // Получаем массив IP-диапазонов
                 var prefixes = doc.RootElement.GetProperty("prefixes");
-
                 List<string> allIps = new List<string>();
-
                 foreach (var entry in prefixes.EnumerateArray())
                 {
                     string region = entry.GetProperty("region").GetString()!;
@@ -193,7 +197,7 @@ namespace SelectRegionForDbd
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
-                Verb = "runas" // Запуск от имени администратора
+                Verb = "runas"
             };
 
             try
@@ -210,7 +214,6 @@ namespace SelectRegionForDbd
                         {
                             return false;
                         }
-
                         return true;
                     }
                 }
@@ -219,7 +222,6 @@ namespace SelectRegionForDbd
             {
                 MessageBox.Show($"Error: {ex.Message}");
             }
-
             return false;
         }
 
@@ -228,20 +230,18 @@ namespace SelectRegionForDbd
         {
             try
             {
-                // Настроим процесс для запуска cmd
                 ProcessStartInfo processStartInfo = new ProcessStartInfo
                 {
-                    FileName = "cmd.exe", // Запуск командной строки
-                    Arguments = "/C ipconfig /flushdns", // Параметр /C выполняет команду и закрывает cmd
-                    CreateNoWindow = true, // Скрываем окно командной строки
-                    UseShellExecute = false, // Не использовать оболочку для выполнения
-                    RedirectStandardOutput = true // Перенаправляем вывод
+                    FileName = "cmd.exe", 
+                    Arguments = "/C ipconfig /flushdns", 
+                    CreateNoWindow = true, 
+                    UseShellExecute = false, 
+                    RedirectStandardOutput = true 
                 };
 
-                // Запуск процесса
                 using (Process process = Process.Start(processStartInfo)!)
                 {
-                    process.WaitForExit(); // Ожидаем завершения команды
+                    process.WaitForExit();
                 }
             }
             catch (Exception ex)
@@ -250,7 +250,6 @@ namespace SelectRegionForDbd
             }
         }
 
-        // Метод для проверки, существует ли правило
         private bool IsRulePresent(string ruleName)
         {
             string command = $"Get-NetFirewallRule | Where-Object {{ $_.DisplayName -eq '{ruleName}' }}";
@@ -261,8 +260,6 @@ namespace SelectRegionForDbd
         {
             openFileDialog.Title = "Select file DeadByDaylight-Win64-Shipping.exe";
             openFileDialog.Filter = "Executable files (DeadByDaylight-Win64-Shipping.exe)|DeadByDaylight-Win64-Shipping.exe";
-
-            // Если файл выбран, сохраняем его путь в строку
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string filePath = openFileDialog.FileName;
@@ -282,36 +279,13 @@ namespace SelectRegionForDbd
                 MessageBox.Show("Please specify the path to the executable file");
                 return;
             }
-
             string selectedRegion = ServersBox.SelectedItem.ToString()!;
-            await SaveIps(selectedRegion);
+            await CreateRules(selectedRegion);
         }
 
         private void btnRemoveRules_Click(object sender, EventArgs e)
         {
-            // Команды для удаления правил
-            string powerShellCommandInBound = "Remove-NetFirewallRule -DisplayName 'DbdBlockRule_IN'";
-            string powerShellCommandOutBound = "Remove-NetFirewallRule -DisplayName 'DbdBlockRule_OUT'";
-
-            // Выполнение команд для удаления правил
-            bool resultInBound = RunPowerShellCommand(powerShellCommandInBound);
-            bool resultOutBound = RunPowerShellCommand(powerShellCommandOutBound);
-
-            // Дополнительно проверяем, что правила действительно удалены
-            bool isInBoundRuleRemoved = !IsRulePresent("DbdBlockRule_IN");
-            bool isOutBoundRuleRemoved = !IsRulePresent("DbdBlockRule_OUT");
-
-            // Проверяем, были ли удалены правила
-            if (isInBoundRuleRemoved && isOutBoundRuleRemoved)
-            {
-                MessageBox.Show("Rules have been successfully removed");
-                FlushDnsCache();
-                CheckFirewallRule(Status);
-            }
-            else
-            {
-                MessageBox.Show("Rules not found or could not be removed");
-            }
+            DeleteRules();
         }
     }
 }
