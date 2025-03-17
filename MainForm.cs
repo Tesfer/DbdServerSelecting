@@ -1,35 +1,19 @@
 using System.Diagnostics;
 using System.Drawing;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Security.Policy;
 using System.Text.Json;
 
 namespace SelectRegionForDbd
 {
     public partial class MainForm : Form
     {
-        // Словарь с регионами и их хостами
-        private readonly Dictionary<string, string> regions = new Dictionary<string, string>
-        {
-            { "US East (Ohio)", "ec2.us-east-2.amazonaws.com" },
-            { "US East (N. Virginia)", "ec2.us-east-1.amazonaws.com" },
-            { "US West (N. California)", "ec2.us-west-1.amazonaws.com" },
-            { "US West (Oregon)", "ec2.us-west-2.amazonaws.com" },
-            { "Asia Pacific (Mumbai)", "ec2.ap-south-1.amazonaws.com" },
-            { "Asia Pacific (Seoul)", "ec2.ap-northeast-2.amazonaws.com" },
-            { "Asia Pacific (Singapore)", "ec2.ap-southeast-1.amazonaws.com" },
-            { "Asia Pacific (Sydney)", "ec2.ap-southeast-2.amazonaws.com" },
-            { "Asia Pacific (Tokyo)", "ec2.ap-northeast-1.amazonaws.com" },
-            { "Canada (Central)", "ec2.ca-central-1.amazonaws.com" },
-            { "Europe (Frankfurt)", "ec2.eu-central-1.amazonaws.com" },
-            { "Europe (Ireland)", "ec2.eu-west-1.amazonaws.com" },
-            { "Europe (London)", "ec2.eu-west-2.amazonaws.com" },
-            { "South America (Sao Paulo)", "ec2.sa-east-1.amazonaws.com" }
-        };
-
         public MainForm()
         {
             InitializeComponent();
+            FilePath.Select(0, 0);
         }
 
         private async Task<string?> GetSingleIpForRegion(string region)
@@ -58,6 +42,19 @@ namespace SelectRegionForDbd
             catch (Exception)
             {
                 return null;  // Если произошла ошибка, возвращаем null
+            }
+        }
+
+        private void btnSelectFile_Click(object sender, EventArgs e)
+        {
+            openFileDialog.Title = "Выберите файл DeadByDaylight-Win64-Shipping.exe";
+            openFileDialog.Filter = "Исполнимые файлы (DeadByDaylight-Win64-Shipping.exe)|DeadByDaylight-Win64-Shipping.exe";
+
+            // Если файл выбран, сохраняем его путь в строку
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = openFileDialog.FileName;
+                FilePath.Text = $"{filePath}";
             }
         }
     }

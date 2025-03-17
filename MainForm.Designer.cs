@@ -58,6 +58,10 @@ namespace SelectRegionForDbd
             OregonPing = new Label();
             PauloLabel = new Label();
             PauloPing = new Label();
+            openFileDialog = new OpenFileDialog();
+            label1 = new Label();
+            FilePath = new TextBox();
+            btnSelectFile = new Button();
             SuspendLayout();
             // 
             // FrankfurtLabel
@@ -340,11 +344,45 @@ namespace SelectRegionForDbd
             PauloPing.TabIndex = 27;
             PauloPing.Text = "ping";
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Verdana", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            label1.Location = new Point(311, 350);
+            label1.Name = "label1";
+            label1.Size = new Size(378, 18);
+            label1.TabIndex = 28;
+            label1.Text = "Путь до DeadByDaylight-Win64-Shipping.exe";
+            // 
+            // FilePath
+            // 
+            FilePath.Font = new Font("Verdana", 12F);
+            FilePath.Location = new Point(150, 375);
+            FilePath.Name = "FilePath";
+            FilePath.ReadOnly = true;
+            FilePath.Size = new Size(700, 27);
+            FilePath.TabIndex = 29;
+            FilePath.TabStop = false;
+            // 
+            // btnSelectFile
+            // 
+            btnSelectFile.Font = new Font("Verdana", 12F);
+            btnSelectFile.Location = new Point(856, 375);
+            btnSelectFile.Name = "btnSelectFile";
+            btnSelectFile.Size = new Size(100, 27);
+            btnSelectFile.TabIndex = 30;
+            btnSelectFile.Text = "Выбрать";
+            btnSelectFile.UseVisualStyleBackColor = true;
+            btnSelectFile.Click += btnSelectFile_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(984, 661);
+            Controls.Add(btnSelectFile);
+            Controls.Add(FilePath);
+            Controls.Add(label1);
             Controls.Add(PauloPing);
             Controls.Add(PauloLabel);
             Controls.Add(OregonPing);
@@ -414,5 +452,9 @@ namespace SelectRegionForDbd
         private Label OregonPing;
         private Label PauloLabel;
         private Label PauloPing;
+        private OpenFileDialog openFileDialog;
+        private Label label1;
+        private TextBox FilePath;
+        private Button btnSelectFile;
     }
 }
