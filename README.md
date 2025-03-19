@@ -1,3 +1,16 @@
+Программа для принудительного выбора сервера в игре Dead by Daylight.
+
+Порядок действий:
+1. Запускаем программу от имени администратора
+2. Указываем путь к файлу DeadByDaylight-Win64-Shipping.exe
+3. Выбираем нужный нам сервер в списке
+4. Жмем кнопку: "Create rules"
+
+!ВАЖНО! 
+Перед использованием заранее проверьте файл hosts и удалите ненужные/нерабочие сервера AWS, если они там были добавлены
+
+-----------------------------------------------------------------------------------------------------------------------
+
 Program for forced selection of a server in the game Dead by Daylight.
 
 Procedure:
@@ -7,4 +20,4 @@ Procedure:
 4. Click the button: "Create rules"
 
 !IMPORTANT!
-Before use, check the hosts file in advance and delete unnecessary/non-working servers, if they were added there
+Before use, check the hosts file in advance and delete unnecessary/non-working servers AWS, if they were added there
