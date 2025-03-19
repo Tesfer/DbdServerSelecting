@@ -1,5 +1,7 @@
 Программа для принудительного выбора сервера в игре Dead by Daylight.
 
+![1](https://github.com/user-attachments/assets/7fe0eb2f-47d4-4976-8cb0-213ce27aa285)
+
 Порядок действий:
 1. Запускаем программу от имени администратора
 2. Указываем путь к файлу DeadByDaylight-Win64-Shipping.exe
