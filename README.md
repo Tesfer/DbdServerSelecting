@@ -7,4 +7,4 @@ Procedure:
 4. Click the button: "Create rules"
 
 !IMPORTANT!
-Before use, check the host file in advance and delete unnecessary/non-working servers, if they were added there
+Before use, check the hosts file in advance and delete unnecessary/non-working servers, if they were added there
