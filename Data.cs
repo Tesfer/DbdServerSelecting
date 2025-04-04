@@ -42,11 +42,11 @@ namespace SelectRegionForDbd
             }
         }
         // Экспорт правил брандмауэра в файлы
-        public static async Task ExportFirewallRule(string ExcludedRegion, string FullPath)
+        public static async Task ExportFirewallRule(string ExcludedRegion, string FullPath, string Platfrom)
         {
             string url = "https://ip-ranges.amazonaws.com/ip-ranges.json";
-            string filePathIn = "IP_ranges_in.txt";
-            string filePathOut = "IP_ranges_out.txt";
+            string filePathIn = $"IP_ranges_for_{Platfrom}_in.txt";
+            string filePathOut = $"IP_ranges_for_{Platfrom}_out.txt";
             HashSet<string> allowedRegions =
             [
                 "us-east-2", "us-west-1", "us-west-2",
@@ -74,8 +74,8 @@ namespace SelectRegionForDbd
                 }
                 string resultIn = string.Join(",", allIps);
                 string resultOut = string.Join(",", allIps);
-                string ruleIn = $"New-NetFirewallRule -Name \"DbdBlockRule_IN\" -DisplayName \"DbdBlockRule_IN\" -Direction Inbound -Action Block -Program \"{FullPath}\" -RemoteAddress ";
-                string ruleOut = $"New-NetFirewallRule -Name \"DbdBlockRule_OUT\" -DisplayName \"DbdBlockRule_OUT\" -Direction Out -Action Block -Program \"{FullPath}\" -RemoteAddress ";
+                string ruleIn = $"New-NetFirewallRule -Name \"DbdBlockRule{Platfrom}_IN\" -DisplayName \"DbdBlockRule{Platfrom}_IN\" -Direction Inbound -Action Block -Program \"{FullPath}\" -RemoteAddress ";
+                string ruleOut = $"New-NetFirewallRule -Name \"DbdBlockRule{Platfrom}_OUT\" -DisplayName \"DbdBlockRule{Platfrom}_OUT\" -Direction Out -Action Block -Program \"{FullPath}\" -RemoteAddress ";
                 resultIn = ruleIn + resultIn;
                 resultOut = ruleOut + resultOut;
                 await File.WriteAllTextAsync(filePathIn, resultIn);
