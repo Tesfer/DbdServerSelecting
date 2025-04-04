@@ -26,11 +26,13 @@ namespace SelectRegionForDbd
                 if (resultInBound && resultOutBound)
                 {
                     label.Text = "Rules are found";
+                    label.Location = new Point(500 - (label.Width / 2), 50);
                     label.ForeColor = Color.Red;
                 }
                 else
                 {
                     label.Text = "No rules found";
+                    label.Location = new Point(500 - (label.Width / 2), 50);
                     label.ForeColor = Color.Green;
                 }
             }
@@ -178,6 +180,31 @@ namespace SelectRegionForDbd
                 {
                     MessageBox.Show("Rules not found or could not be removed");
                 }
+            }
+        }
+        // Получение задержки до разных серверов Amazon GameLift Servers
+        public static async void GetPing(string host, Label label)
+        {
+            try
+            {
+                using Ping ping = new();
+                PingReply reply = await ping.SendPingAsync(host);
+                if (reply.Status == IPStatus.Success)
+                {
+                    label.Text = $"{reply.RoundtripTime} ms";
+                    label.ForeColor = reply.RoundtripTime < 100 ? Color.Green :
+                                      reply.RoundtripTime < 200 ? Color.Orange : Color.Red;
+                }
+                else
+                {
+                    label.Text = "-1";
+                    label.ForeColor = Color.Red;
+                }
+            }
+            catch
+            {
+                label.Text = "Error";
+                label.ForeColor = Color.Red;
             }
         }
         // Очистка DNS кэша

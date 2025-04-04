@@ -75,7 +75,7 @@ namespace SelectRegionForDbd
             // 
             FrankfurtLabel.AutoSize = true;
             FrankfurtLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            FrankfurtLabel.Location = new Point(50, 50);
+            FrankfurtLabel.Location = new Point(50, 100);
             FrankfurtLabel.Name = "FrankfurtLabel";
             FrankfurtLabel.Size = new Size(170, 23);
             FrankfurtLabel.TabIndex = 0;
@@ -85,7 +85,7 @@ namespace SelectRegionForDbd
             // 
             FrankfurtPing.AutoSize = true;
             FrankfurtPing.Font = new Font("MuseoSansEx 500", 14.25F);
-            FrankfurtPing.Location = new Point(226, 50);
+            FrankfurtPing.Location = new Point(226, 100);
             FrankfurtPing.Name = "FrankfurtPing";
             FrankfurtPing.Size = new Size(48, 23);
             FrankfurtPing.TabIndex = 1;
@@ -95,7 +95,7 @@ namespace SelectRegionForDbd
             // 
             IrelandLabel.AutoSize = true;
             IrelandLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            IrelandLabel.Location = new Point(50, 100);
+            IrelandLabel.Location = new Point(50, 150);
             IrelandLabel.Name = "IrelandLabel";
             IrelandLabel.Size = new Size(150, 23);
             IrelandLabel.TabIndex = 2;
@@ -105,7 +105,7 @@ namespace SelectRegionForDbd
             // 
             IrelandPing.AutoSize = true;
             IrelandPing.Font = new Font("MuseoSansEx 500", 14.25F);
-            IrelandPing.Location = new Point(206, 100);
+            IrelandPing.Location = new Point(206, 150);
             IrelandPing.Name = "IrelandPing";
             IrelandPing.Size = new Size(48, 23);
             IrelandPing.TabIndex = 3;
@@ -115,7 +115,7 @@ namespace SelectRegionForDbd
             // 
             LondonLabel.AutoSize = true;
             LondonLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            LondonLabel.Location = new Point(50, 150);
+            LondonLabel.Location = new Point(50, 200);
             LondonLabel.Name = "LondonLabel";
             LondonLabel.Size = new Size(157, 23);
             LondonLabel.TabIndex = 4;
@@ -125,7 +125,7 @@ namespace SelectRegionForDbd
             // 
             LondonPing.AutoSize = true;
             LondonPing.Font = new Font("MuseoSansEx 500", 14.25F);
-            LondonPing.Location = new Point(213, 150);
+            LondonPing.Location = new Point(213, 200);
             LondonPing.Name = "LondonPing";
             LondonPing.Size = new Size(48, 23);
             LondonPing.TabIndex = 5;
@@ -135,7 +135,7 @@ namespace SelectRegionForDbd
             // 
             MumbaiLabel.AutoSize = true;
             MumbaiLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            MumbaiLabel.Location = new Point(325, 50);
+            MumbaiLabel.Location = new Point(325, 100);
             MumbaiLabel.Name = "MumbaiLabel";
             MumbaiLabel.Size = new Size(195, 23);
             MumbaiLabel.TabIndex = 6;
@@ -145,7 +145,7 @@ namespace SelectRegionForDbd
             // 
             MumbaiPing.AutoSize = true;
             MumbaiPing.Font = new Font("MuseoSansEx 500", 14.25F);
-            MumbaiPing.Location = new Point(526, 50);
+            MumbaiPing.Location = new Point(526, 100);
             MumbaiPing.Name = "MumbaiPing";
             MumbaiPing.Size = new Size(48, 23);
             MumbaiPing.TabIndex = 7;
@@ -155,7 +155,7 @@ namespace SelectRegionForDbd
             // 
             SeoulLabel.AutoSize = true;
             SeoulLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            SeoulLabel.Location = new Point(325, 100);
+            SeoulLabel.Location = new Point(325, 150);
             SeoulLabel.Name = "SeoulLabel";
             SeoulLabel.Size = new Size(174, 23);
             SeoulLabel.TabIndex = 8;
@@ -165,7 +165,7 @@ namespace SelectRegionForDbd
             // 
             SeoulPing.AutoSize = true;
             SeoulPing.Font = new Font("MuseoSansEx 500", 14.25F);
-            SeoulPing.Location = new Point(505, 100);
+            SeoulPing.Location = new Point(505, 150);
             SeoulPing.Name = "SeoulPing";
             SeoulPing.Size = new Size(48, 23);
             SeoulPing.TabIndex = 9;
@@ -175,7 +175,7 @@ namespace SelectRegionForDbd
             // 
             SingaporeLabel.AutoSize = true;
             SingaporeLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            SingaporeLabel.Location = new Point(325, 150);
+            SingaporeLabel.Location = new Point(325, 200);
             SingaporeLabel.Name = "SingaporeLabel";
             SingaporeLabel.Size = new Size(213, 23);
             SingaporeLabel.TabIndex = 10;
@@ -185,7 +185,7 @@ namespace SelectRegionForDbd
             // 
             SingaporePing.AutoSize = true;
             SingaporePing.Font = new Font("MuseoSansEx 500", 14.25F);
-            SingaporePing.Location = new Point(544, 150);
+            SingaporePing.Location = new Point(544, 200);
             SingaporePing.Name = "SingaporePing";
             SingaporePing.Size = new Size(48, 23);
             SingaporePing.TabIndex = 11;
@@ -195,7 +195,7 @@ namespace SelectRegionForDbd
             // 
             SydneyLabel.AutoSize = true;
             SydneyLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            SydneyLabel.Location = new Point(325, 200);
+            SydneyLabel.Location = new Point(325, 250);
             SydneyLabel.Name = "SydneyLabel";
             SydneyLabel.Size = new Size(188, 23);
             SydneyLabel.TabIndex = 12;
@@ -205,7 +205,7 @@ namespace SelectRegionForDbd
             // 
             SydneyPing.AutoSize = true;
             SydneyPing.Font = new Font("MuseoSansEx 500", 14.25F);
-            SydneyPing.Location = new Point(519, 200);
+            SydneyPing.Location = new Point(519, 250);
             SydneyPing.Name = "SydneyPing";
             SydneyPing.Size = new Size(48, 23);
             SydneyPing.TabIndex = 13;
@@ -215,7 +215,7 @@ namespace SelectRegionForDbd
             // 
             TokyoLabel.AutoSize = true;
             TokyoLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            TokyoLabel.Location = new Point(325, 250);
+            TokyoLabel.Location = new Point(325, 300);
             TokyoLabel.Name = "TokyoLabel";
             TokyoLabel.Size = new Size(179, 23);
             TokyoLabel.TabIndex = 14;
@@ -225,7 +225,7 @@ namespace SelectRegionForDbd
             // 
             TokyoPing.AutoSize = true;
             TokyoPing.Font = new Font("MuseoSansEx 500", 14.25F);
-            TokyoPing.Location = new Point(510, 250);
+            TokyoPing.Location = new Point(510, 300);
             TokyoPing.Name = "TokyoPing";
             TokyoPing.Size = new Size(48, 23);
             TokyoPing.TabIndex = 15;
@@ -235,7 +235,7 @@ namespace SelectRegionForDbd
             // 
             CentralLabel.AutoSize = true;
             CentralLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            CentralLabel.Location = new Point(50, 250);
+            CentralLabel.Location = new Point(50, 300);
             CentralLabel.Name = "CentralLabel";
             CentralLabel.Size = new Size(158, 23);
             CentralLabel.TabIndex = 16;
@@ -245,7 +245,7 @@ namespace SelectRegionForDbd
             // 
             CentralPing.AutoSize = true;
             CentralPing.Font = new Font("MuseoSansEx 500", 14.25F);
-            CentralPing.Location = new Point(214, 250);
+            CentralPing.Location = new Point(214, 300);
             CentralPing.Name = "CentralPing";
             CentralPing.Size = new Size(48, 23);
             CentralPing.TabIndex = 17;
@@ -255,7 +255,7 @@ namespace SelectRegionForDbd
             // 
             OhioLabel.AutoSize = true;
             OhioLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            OhioLabel.Location = new Point(625, 100);
+            OhioLabel.Location = new Point(625, 150);
             OhioLabel.Name = "OhioLabel";
             OhioLabel.Size = new Size(136, 23);
             OhioLabel.TabIndex = 18;
@@ -265,7 +265,7 @@ namespace SelectRegionForDbd
             // 
             OhioPing.AutoSize = true;
             OhioPing.Font = new Font("MuseoSansEx 500", 14.25F);
-            OhioPing.Location = new Point(767, 100);
+            OhioPing.Location = new Point(767, 150);
             OhioPing.Name = "OhioPing";
             OhioPing.Size = new Size(48, 23);
             OhioPing.TabIndex = 19;
@@ -276,7 +276,7 @@ namespace SelectRegionForDbd
             VirginiaLabel.AutoSize = true;
             VirginiaLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
             VirginiaLabel.ForeColor = SystemColors.ControlDarkDark;
-            VirginiaLabel.Location = new Point(625, 50);
+            VirginiaLabel.Location = new Point(625, 100);
             VirginiaLabel.Name = "VirginiaLabel";
             VirginiaLabel.Size = new Size(181, 23);
             VirginiaLabel.TabIndex = 20;
@@ -286,7 +286,7 @@ namespace SelectRegionForDbd
             // 
             VirginiaPing.AutoSize = true;
             VirginiaPing.Font = new Font("MuseoSansEx 500", 14.25F);
-            VirginiaPing.Location = new Point(812, 50);
+            VirginiaPing.Location = new Point(812, 100);
             VirginiaPing.Name = "VirginiaPing";
             VirginiaPing.Size = new Size(48, 23);
             VirginiaPing.TabIndex = 21;
@@ -296,7 +296,7 @@ namespace SelectRegionForDbd
             // 
             CaliforniaLabel.AutoSize = true;
             CaliforniaLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            CaliforniaLabel.Location = new Point(625, 150);
+            CaliforniaLabel.Location = new Point(625, 200);
             CaliforniaLabel.Name = "CaliforniaLabel";
             CaliforniaLabel.Size = new Size(208, 23);
             CaliforniaLabel.TabIndex = 22;
@@ -306,7 +306,7 @@ namespace SelectRegionForDbd
             // 
             CaliforniaPing.AutoSize = true;
             CaliforniaPing.Font = new Font("MuseoSansEx 500", 14.25F);
-            CaliforniaPing.Location = new Point(839, 150);
+            CaliforniaPing.Location = new Point(839, 200);
             CaliforniaPing.Name = "CaliforniaPing";
             CaliforniaPing.Size = new Size(48, 23);
             CaliforniaPing.TabIndex = 23;
@@ -316,7 +316,7 @@ namespace SelectRegionForDbd
             // 
             OregonLabel.AutoSize = true;
             OregonLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            OregonLabel.Location = new Point(625, 200);
+            OregonLabel.Location = new Point(625, 250);
             OregonLabel.Name = "OregonLabel";
             OregonLabel.Size = new Size(166, 23);
             OregonLabel.TabIndex = 24;
@@ -326,7 +326,7 @@ namespace SelectRegionForDbd
             // 
             OregonPing.AutoSize = true;
             OregonPing.Font = new Font("MuseoSansEx 500", 14.25F);
-            OregonPing.Location = new Point(797, 200);
+            OregonPing.Location = new Point(797, 250);
             OregonPing.Name = "OregonPing";
             OregonPing.Size = new Size(48, 23);
             OregonPing.TabIndex = 25;
@@ -336,7 +336,7 @@ namespace SelectRegionForDbd
             // 
             PauloLabel.AutoSize = true;
             PauloLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            PauloLabel.Location = new Point(625, 250);
+            PauloLabel.Location = new Point(625, 300);
             PauloLabel.Name = "PauloLabel";
             PauloLabel.Size = new Size(241, 23);
             PauloLabel.TabIndex = 26;
@@ -346,7 +346,7 @@ namespace SelectRegionForDbd
             // 
             PauloPing.AutoSize = true;
             PauloPing.Font = new Font("MuseoSansEx 500", 14.25F);
-            PauloPing.Location = new Point(872, 250);
+            PauloPing.Location = new Point(872, 300);
             PauloPing.Name = "PauloPing";
             PauloPing.Size = new Size(48, 23);
             PauloPing.TabIndex = 27;
@@ -356,7 +356,7 @@ namespace SelectRegionForDbd
             // 
             PathLabel.AutoSize = true;
             PathLabel.Font = new Font("Verdana", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            PathLabel.Location = new Point(312, 350);
+            PathLabel.Location = new Point(312, 400);
             PathLabel.Name = "PathLabel";
             PathLabel.Size = new Size(375, 18);
             PathLabel.TabIndex = 28;
@@ -365,7 +365,7 @@ namespace SelectRegionForDbd
             // FilePath
             // 
             FilePath.Font = new Font("Verdana", 12F);
-            FilePath.Location = new Point(150, 375);
+            FilePath.Location = new Point(150, 425);
             FilePath.Name = "FilePath";
             FilePath.ReadOnly = true;
             FilePath.Size = new Size(700, 27);
@@ -376,7 +376,7 @@ namespace SelectRegionForDbd
             // 
             btnSelectFile.FlatStyle = FlatStyle.Flat;
             btnSelectFile.Font = new Font("Verdana", 12F);
-            btnSelectFile.Location = new Point(856, 375);
+            btnSelectFile.Location = new Point(856, 425);
             btnSelectFile.Name = "btnSelectFile";
             btnSelectFile.Size = new Size(100, 27);
             btnSelectFile.TabIndex = 30;
@@ -388,7 +388,7 @@ namespace SelectRegionForDbd
             // 
             StatusLabel.AutoSize = true;
             StatusLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            StatusLabel.Location = new Point(432, 500);
+            StatusLabel.Location = new Point(466, 25);
             StatusLabel.Name = "StatusLabel";
             StatusLabel.Size = new Size(68, 23);
             StatusLabel.TabIndex = 31;
@@ -398,7 +398,7 @@ namespace SelectRegionForDbd
             // 
             Status.AutoSize = true;
             Status.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            Status.Location = new Point(496, 500);
+            Status.Location = new Point(479, 50);
             Status.Name = "Status";
             Status.Size = new Size(42, 23);
             Status.TabIndex = 32;
@@ -432,7 +432,7 @@ namespace SelectRegionForDbd
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Verdana", 12F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label1.Location = new Point(393, 425);
+            label1.Location = new Point(393, 475);
             label1.Name = "label1";
             label1.Size = new Size(213, 18);
             label1.TabIndex = 35;
@@ -445,7 +445,7 @@ namespace SelectRegionForDbd
             ServersBox.Font = new Font("Verdana", 12F);
             ServersBox.FormattingEnabled = true;
             ServersBox.Items.AddRange(new object[] { "eu-central-1", "eu-west-1", "eu-west-2", "us-east-1", "us-east-2", "us-west-1", "us-west-2", "ca-central-1", "ap-south-1", "ap-northeast-1", "ap-northeast-2", "ap-southeast-1", "ap-southeast-2", "sa-east-1" });
-            ServersBox.Location = new Point(250, 450);
+            ServersBox.Location = new Point(250, 500);
             ServersBox.Name = "ServersBox";
             ServersBox.Size = new Size(500, 26);
             ServersBox.TabIndex = 36;
