@@ -1,4 +1,4 @@
-![1](https://github.com/user-attachments/assets/7fe0eb2f-47d4-4976-8cb0-213ce27aa285)
+![1](https://github.com/user-attachments/assets/3327d0d5-3119-4efc-9674-eab9b919f7ad)
 
 Программа для принудительного выбора сервера в игре Dead by Daylight.
 
@@ -9,7 +9,8 @@
 4. Жмем кнопку: "Create rules"
 
 !ВАЖНО! 
-Перед использованием заранее проверьте файл hosts и удалите ненужные/нерабочие сервера AWS, если они там были добавлены
+В данный момент поддерживает только STEAM версию игры.
+Перед использованием заранее проверьте файл hosts и удалите ненужные/нерабочие сервера AWS, если они там были добавлены.
 
 -----------------------------------------------------------------------------------------------------------------------
 
@@ -22,4 +23,5 @@ Procedure:
 4. Click the button: "Create rules"
 
 !IMPORTANT!
+Currently only supports the STEAM version of the game.
 Before use, check the hosts file in advance and delete unnecessary/non-working servers AWS, if they were added there
