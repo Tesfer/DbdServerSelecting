@@ -9,9 +9,9 @@
 4. Жмем кнопку: "Create rules"
 
 !ВАЖНО! 
-В данный момент поддерживает только STEAM версию игры.
-Перед использованием проверьте файл hosts и удалите сервера AWS, если их добавляли.
-Брандмауэр Windows обязательно должен быть включён.
+В данный момент поддерживает только STEAM версию игры
+Перед использованием проверьте файл hosts и удалите сервера AWS, если их добавляли
+Брандмауэр Windows обязательно должен быть включён
 
 -----------------------------------------------------------------------------------------------------------------------
 
@@ -24,6 +24,6 @@ Procedure:
 4. Click the button: "Create rules"
 
 !IMPORTANT! 
-Currently only supports the STEAM version of the game.
-Before use, check the hosts file and remove AWS servers if they were added.
-Windows Firewall must be enabled.
+Currently only supports the STEAM version of the game
+Before use, check the hosts file and remove AWS servers if they were added
+Windows Firewall must be enabled
