@@ -113,8 +113,9 @@ namespace SelectRegionForDbd
                 MessageBox.Show("Please specify the path to the executable file");
                 return;
             }
+            string platform = PlatformBox.SelectedItem?.ToString()!;
             string selectedRegion = ServersBox.SelectedItem.ToString()!;
-            await Data.CreateFirewallRule(selectedRegion, FilePath.Text, Status);
+            await Data.CreateFirewallRule(selectedRegion, FilePath.Text, Status, platform);
             GetPing();
         }
         // Кнопка удаления правил
@@ -125,8 +126,9 @@ namespace SelectRegionForDbd
                 MessageBox.Show("Please select the region to be deleted");
                 return;
             }
+            string platform = PlatformBox.SelectedItem?.ToString()!;
             string selectedRegion = ServersBox.SelectedItem.ToString()!;
-            Data.DeleteFirewallRule(selectedRegion, Status);
+            Data.DeleteFirewallRule(selectedRegion, Status, platform);
             GetPing();
         }
         // Кнопка экспорта правил
