@@ -69,6 +69,8 @@ namespace SelectRegionForDbd
             label1 = new Label();
             ServersBox = new ComboBox();
             btnExportRules = new Button();
+            PlatformLabel = new Label();
+            PlatformBox = new ComboBox();
             SuspendLayout();
             // 
             // FrankfurtLabel
@@ -462,11 +464,36 @@ namespace SelectRegionForDbd
             btnExportRules.UseVisualStyleBackColor = true;
             btnExportRules.Click += BtnExportRules_Click;
             // 
+            // PlatformLabel
+            // 
+            PlatformLabel.AutoSize = true;
+            PlatformLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            PlatformLabel.Location = new Point(12, 9);
+            PlatformLabel.Name = "PlatformLabel";
+            PlatformLabel.Size = new Size(92, 23);
+            PlatformLabel.TabIndex = 38;
+            PlatformLabel.Text = "Platform:";
+            // 
+            // PlatformBox
+            // 
+            PlatformBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            PlatformBox.FlatStyle = FlatStyle.Popup;
+            PlatformBox.Font = new Font("Verdana", 12F);
+            PlatformBox.FormattingEnabled = true;
+            PlatformBox.Items.AddRange(new object[] { "STEAM", "EGS", "MS" });
+            PlatformBox.Location = new Point(12, 35);
+            PlatformBox.Name = "PlatformBox";
+            PlatformBox.Size = new Size(92, 26);
+            PlatformBox.TabIndex = 39;
+            PlatformBox.SelectedIndexChanged += PlatformBox_SelectedIndexChanged;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(984, 661);
+            Controls.Add(PlatformBox);
+            Controls.Add(PlatformLabel);
             Controls.Add(btnExportRules);
             Controls.Add(ServersBox);
             Controls.Add(label1);
@@ -557,5 +584,7 @@ namespace SelectRegionForDbd
         private Label label1;
         private ComboBox ServersBox;
         private Button btnExportRules;
+        private Label PlatformLabel;
+        private ComboBox PlatformBox;
     }
 }
