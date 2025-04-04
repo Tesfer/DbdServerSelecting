@@ -25,45 +25,20 @@ namespace SelectRegionForDbd
         // Получение задержки до разных серверов Amazon GameLift Servers
         private void GetPing()
         {
-            Ping("gamelift.eu-central-1.amazonaws.com", FrankfurtPing);
-            Ping("gamelift.eu-west-1.amazonaws.com", IrelandPing);
-            Ping("gamelift.eu-west-2.amazonaws.com", LondonPing);
-            Ping("gamelift.ca-central-1.amazonaws.com", CentralPing);
-            Ping("gamelift.ap-south-1.amazonaws.com", MumbaiPing);
-            Ping("gamelift.ap-northeast-2.amazonaws.com", SeoulPing);
-            Ping("gamelift.ap-southeast-1.amazonaws.com", SingaporePing);
-            Ping("gamelift.ap-southeast-2.amazonaws.com", SydneyPing);
-            Ping("gamelift.ap-northeast-1.amazonaws.com", TokyoPing);
-            Ping("gamelift.us-east-2.amazonaws.com", OhioPing);
-            Ping("gamelift.us-east-1.amazonaws.com", VirginiaPing);
-            Ping("gamelift.us-west-1.amazonaws.com", CaliforniaPing);
-            Ping("gamelift.us-west-2.amazonaws.com", OregonPing);
-            Ping("gamelift.sa-east-1.amazonaws.com", PauloPing);
-        }
-        // Асинхронный метод для пинга выбранного сервера
-        private static async void Ping(string host, Label label)
-        {
-            try
-            {
-                using Ping ping = new();
-                PingReply reply = await ping.SendPingAsync(host);
-                if (reply.Status == IPStatus.Success)
-                {
-                    label.Text = $"{reply.RoundtripTime} ms";
-                    label.ForeColor = reply.RoundtripTime < 100 ? Color.Green :
-                                      reply.RoundtripTime < 200 ? Color.Orange : Color.Red;
-                }
-                else
-                {
-                    label.Text = "-1";
-                    label.ForeColor = Color.Red;
-                }
-            }
-            catch
-            {
-                label.Text = "Error";
-                label.ForeColor = Color.Red;
-            }
+            Data.GetPing("gamelift.eu-central-1.amazonaws.com", FrankfurtPing);
+            Data.GetPing("gamelift.eu-west-1.amazonaws.com", IrelandPing);
+            Data.GetPing("gamelift.eu-west-2.amazonaws.com", LondonPing);
+            Data.GetPing("gamelift.ca-central-1.amazonaws.com", CentralPing);
+            Data.GetPing("gamelift.ap-south-1.amazonaws.com", MumbaiPing);
+            Data.GetPing("gamelift.ap-northeast-2.amazonaws.com", SeoulPing);
+            Data.GetPing("gamelift.ap-southeast-1.amazonaws.com", SingaporePing);
+            Data.GetPing("gamelift.ap-southeast-2.amazonaws.com", SydneyPing);
+            Data.GetPing("gamelift.ap-northeast-1.amazonaws.com", TokyoPing);
+            Data.GetPing("gamelift.us-east-2.amazonaws.com", OhioPing);
+            Data.GetPing("gamelift.us-east-1.amazonaws.com", VirginiaPing);
+            Data.GetPing("gamelift.us-west-1.amazonaws.com", CaliforniaPing);
+            Data.GetPing("gamelift.us-west-2.amazonaws.com", OregonPing);
+            Data.GetPing("gamelift.sa-east-1.amazonaws.com", PauloPing);
         }
         // Кнопка выбора пути к файлу DeadByDaylight-Win64-Shipping.exe
         private void BtnSelectFile_Click(object sender, EventArgs e)
