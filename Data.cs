@@ -19,8 +19,8 @@ namespace SelectRegionForDbd
         {
             try
             {
-                string powerShellCommandInBound = "Get-NetFirewallRule | Where-Object { $_.DisplayName -eq 'DbdBlockRule_IN' } | Select-Object -First 1";
-                string powerShellCommandOutBound = "Get-NetFirewallRule | Where-Object { $_.DisplayName -eq 'DbdBlockRule_OUT' } | Select-Object -First 1";
+                string powerShellCommandInBound = "Get-NetFirewallRule | Where-Object { $_.DisplayName -match 'DbdBlockRule' } | Select-Object -First 1";
+                string powerShellCommandOutBound = "Get-NetFirewallRule | Where-Object { $_.DisplayName -match 'DbdBlockRule' } | Select-Object -First 1";
                 bool resultInBound = PowerShell.Command(powerShellCommandInBound);
                 bool resultOutBound = PowerShell.Command(powerShellCommandOutBound);
                 if (resultInBound && resultOutBound)
@@ -92,7 +92,7 @@ namespace SelectRegionForDbd
             }
         }
         // Добавление правил брандмауэра
-        public static async Task CreateFirewallRule(string ExcludedRegion, string FullPath, Label Status)
+        public static async Task CreateFirewallRule(string ExcludedRegion, string FullPath, Label Status, string Platform)
         {
             bool hosts = Hosts.Write(ExcludedRegion);
             if (hosts)
@@ -127,8 +127,8 @@ namespace SelectRegionForDbd
                     }
                     string resultIn = string.Join(",", allIps);
                     string resultOut = string.Join(",", allIps);
-                    string ruleIn = $"New-NetFirewallRule -Name \"DbdBlockRule_IN\" -DisplayName \"DbdBlockRule_IN\" -Direction Inbound -Action Block -Program \"{FullPath}\" -RemoteAddress ";
-                    string ruleOut = $"New-NetFirewallRule -Name \"DbdBlockRule_OUT\" -DisplayName \"DbdBlockRule_OUT\" -Direction Out -Action Block -Program \"{FullPath}\" -RemoteAddress ";
+                    string ruleIn = $"New-NetFirewallRule -Name \"DbdBlockRule{Platform}_IN\" -DisplayName \"DbdBlockRule{Platform}_IN\" -Direction Inbound -Action Block -Program \"{FullPath}\" -RemoteAddress ";
+                    string ruleOut = $"New-NetFirewallRule -Name \"DbdBlockRule{Platform}_OUT\" -DisplayName \"DbdBlockRule{Platform}_OUT\" -Direction Out -Action Block -Program \"{FullPath}\" -RemoteAddress ";
                     resultIn = ruleIn + resultIn;
                     resultOut = ruleOut + resultOut;
                     await File.WriteAllTextAsync(scriptPathIn, resultIn);
@@ -159,17 +159,17 @@ namespace SelectRegionForDbd
             }
         }
         // Удаление правил брандмауэра
-        public static void DeleteFirewallRule(string region, Label Status)
+        public static void DeleteFirewallRule(string region, Label Status, string Platform)
         {
             bool hosts = Hosts.Remove(region);
             if (hosts)
             {
-                string powerShellCommandInBound = "Remove-NetFirewallRule -DisplayName 'DbdBlockRule_IN'";
-                string powerShellCommandOutBound = "Remove-NetFirewallRule -DisplayName 'DbdBlockRule_OUT'";
+                string powerShellCommandInBound = $"Remove-NetFirewallRule -DisplayName 'DbdBlockRule{Platform}_IN'";
+                string powerShellCommandOutBound = $"Remove-NetFirewallRule -DisplayName 'DbdBlockRule{Platform}_OUT'";
                 PowerShell.Command(powerShellCommandInBound);
                 PowerShell.Command(powerShellCommandOutBound);
-                bool isInBoundRuleRemoved = !CheckingForTheExistenceOfRules("DbdBlockRule_IN");
-                bool isOutBoundRuleRemoved = !CheckingForTheExistenceOfRules("DbdBlockRule_OUT");
+                bool isInBoundRuleRemoved = !CheckingForTheExistenceOfRules($"DbdBlockRule{Platform}_IN");
+                bool isOutBoundRuleRemoved = !CheckingForTheExistenceOfRules($"DbdBlockRule{Platform}_OUT");
                 if (isInBoundRuleRemoved && isOutBoundRuleRemoved)
                 {
                     MessageBox.Show("Rules have been successfully removed");
