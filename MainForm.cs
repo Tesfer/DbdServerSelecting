@@ -5,10 +5,12 @@ using System.Drawing;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Reflection.Emit;
 using System.Security.Policy;
 using System.Text.Json;
 using System.Threading;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace SelectRegionForDbd
 {
@@ -17,7 +19,8 @@ namespace SelectRegionForDbd
         public MainForm()
         {
             InitializeComponent();
-            Themes.Dark(this, btnCreateRules, btnRemoveRules, btnExportRules, btnSelectFile, FilePath, ServersBox);
+            PlatformBox.SelectedIndex = 0;
+            Themes.Dark(this, btnCreateRules, btnRemoveRules, btnExportRules, btnSelectFile, FilePath, ServersBox, PlatformBox);
             GetPing();
             Data.GetFirewallRuleStatus(Status);
             FilePath.Select(0, 0);
@@ -40,15 +43,61 @@ namespace SelectRegionForDbd
             Data.GetPing("gamelift.us-west-2.amazonaws.com", OregonPing);
             Data.GetPing("gamelift.sa-east-1.amazonaws.com", PauloPing);
         }
-        //  нопка выбора пути к файлу DeadByDaylight-Win64-Shipping.exe
+        // ќбработочик дл€ PlatformBox
+        private void PlatformBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ServersBox.SelectedIndex = -1;
+            FilePath.Text = string.Empty;
+            string selected = PlatformBox.SelectedItem?.ToString()!;
+            if (selected == "STEAM")
+            {
+                PathLabel.Text = "Path to DeadByDaylight-Win64-Shipping.exe";
+                PathLabel.Location = new Point(500 - (PathLabel.Width / 2), 400);
+            }
+            else if (selected == "EGS")
+            {
+                PathLabel.Text = "Path to DeadByDaylight-EGS-Shipping.exe";
+                PathLabel.Location = new Point(500 - (PathLabel.Width / 2), 400);
+            }
+            else
+            {
+                PathLabel.Text = "Path to DeadByDaylight-WinGDK-Shipping.exe";
+                PathLabel.Location = new Point(500 - (PathLabel.Width / 2), 400);
+            }
+        }
+        //  нопка выбора пути к исполн€емому файлу
         private void BtnSelectFile_Click(object sender, EventArgs e)
         {
-            openFileDialog.Title = "Select file DeadByDaylight-Win64-Shipping.exe";
-            openFileDialog.Filter = "Executable files (DeadByDaylight-Win64-Shipping.exe)|DeadByDaylight-Win64-Shipping.exe";
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            string selected = PlatformBox.SelectedItem?.ToString()!;
+            if (selected == "STEAM")
             {
-                string filePath = openFileDialog.FileName;
-                FilePath.Text = $"{filePath}";
+                openFileDialog.Title = "Select file DeadByDaylight-Win64-Shipping.exe";
+                openFileDialog.Filter = "Executable files (DeadByDaylight-Win64-Shipping.exe)|DeadByDaylight-Win64-Shipping.exe";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = openFileDialog.FileName;
+                    FilePath.Text = $"{filePath}";
+                }
+            }
+            else if (selected == "EGS")
+            {
+                openFileDialog.Title = "Select file DeadByDaylight-EGS-Shipping.exe";
+                openFileDialog.Filter = "Executable files (DeadByDaylight-EGS-Shipping.exe)|DeadByDaylight-EGS-Shipping.exe";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = openFileDialog.FileName;
+                    FilePath.Text = $"{filePath}";
+                }
+            }
+            else
+            {
+                openFileDialog.Title = "Select file DeadByDaylight-WinGDK-Shipping.exe";
+                openFileDialog.Filter = "Executable files (DeadByDaylight-WinGDK-Shipping.exe)|DeadByDaylight-WinGDK-Shipping.exe";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = openFileDialog.FileName;
+                    FilePath.Text = $"{filePath}";
+                }
             }
         }
         //  нопка создани€ правил
