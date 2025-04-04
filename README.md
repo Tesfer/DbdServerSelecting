@@ -10,7 +10,8 @@
 
 !ВАЖНО! 
 В данный момент поддерживает только STEAM версию игры.
-Перед использованием заранее проверьте файл hosts и удалите ненужные/нерабочие сервера AWS, если они там были добавлены.
+Перед использованием проверьте файл hosts и удалите сервера AWS, если их добавляли.
+Брандмауэр Windows обязательно должен быть включён.
 
 -----------------------------------------------------------------------------------------------------------------------
 
@@ -22,6 +23,7 @@ Procedure:
 3. Select the server we need in the list
 4. Click the button: "Create rules"
 
-!IMPORTANT!
+!IMPORTANT! 
 Currently only supports the STEAM version of the game.
-Before use, check the hosts file in advance and delete unnecessary/non-working servers AWS, if they were added there
+Before use, check the hosts file and remove AWS servers if they were added.
+Windows Firewall must be enabled.
