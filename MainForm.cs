@@ -142,9 +142,10 @@ namespace SelectRegionForDbd
                 MessageBox.Show("Please specify the path to the executable file");
                 return;
             }
+            string platform = PlatformBox.SelectedItem?.ToString()!;
             string selectedRegion = ServersBox.SelectedItem.ToString()!;
             string filePath = FilePath.Text;
-            await Data.ExportFirewallRule(selectedRegion, filePath);
+            await Data.ExportFirewallRule(selectedRegion, filePath, platform);
         }
     }
 }
