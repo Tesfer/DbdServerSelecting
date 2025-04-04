@@ -68,6 +68,7 @@ namespace SelectRegionForDbd
             btnCreateRules = new Button();
             label1 = new Label();
             ServersBox = new ComboBox();
+            btnExportRules = new Button();
             SuspendLayout();
             // 
             // FrankfurtLabel
@@ -387,7 +388,7 @@ namespace SelectRegionForDbd
             // 
             StatusLabel.AutoSize = true;
             StatusLabel.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            StatusLabel.Location = new Point(432, 625);
+            StatusLabel.Location = new Point(432, 500);
             StatusLabel.Name = "StatusLabel";
             StatusLabel.Size = new Size(68, 23);
             StatusLabel.TabIndex = 31;
@@ -397,7 +398,7 @@ namespace SelectRegionForDbd
             // 
             Status.AutoSize = true;
             Status.Font = new Font("MuseoSansEx 500", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            Status.Location = new Point(496, 625);
+            Status.Location = new Point(496, 500);
             Status.Name = "Status";
             Status.Size = new Size(42, 23);
             Status.TabIndex = 32;
@@ -449,11 +450,24 @@ namespace SelectRegionForDbd
             ServersBox.Size = new Size(500, 26);
             ServersBox.TabIndex = 36;
             // 
+            // btnExportRules
+            // 
+            btnExportRules.FlatStyle = FlatStyle.Popup;
+            btnExportRules.Font = new Font("Verdana", 12F);
+            btnExportRules.Location = new Point(437, 599);
+            btnExportRules.Name = "btnExportRules";
+            btnExportRules.Size = new Size(125, 50);
+            btnExportRules.TabIndex = 37;
+            btnExportRules.Text = "Export Rules to txt";
+            btnExportRules.UseVisualStyleBackColor = true;
+            btnExportRules.Click += BtnExportRules_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(984, 661);
+            Controls.Add(btnExportRules);
             Controls.Add(ServersBox);
             Controls.Add(label1);
             Controls.Add(btnCreateRules);
@@ -542,5 +556,6 @@ namespace SelectRegionForDbd
         private Button btnCreateRules;
         private Label label1;
         private ComboBox ServersBox;
+        private Button btnExportRules;
     }
 }

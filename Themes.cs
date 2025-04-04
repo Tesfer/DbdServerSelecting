@@ -9,7 +9,7 @@ namespace SelectRegionForDbd
 {
     public static class Themes
     {
-        public static void Dark(Form form, Button create, Button remove, Button choose, TextBox textBox, ComboBox comboBox)
+        public static void Dark(Form form, Button create, Button remove, Button export, Button choose,TextBox textBox, ComboBox comboBox)
         {
             // Стандартный тёмный фон
             form.BackColor = Color.FromArgb(45, 45, 48);
@@ -17,6 +17,7 @@ namespace SelectRegionForDbd
             form.ForeColor = Color.LightGray;
             create.BackColor = Color.FromArgb(63, 63, 70);
             remove.BackColor = Color.FromArgb(63, 63, 70);
+            export.BackColor = Color.FromArgb(63, 63, 70);
             choose.BackColor = Color.FromArgb(63, 63, 70);
             // Для TextBox
             textBox.BackColor = Color.FromArgb(37, 37, 38);
