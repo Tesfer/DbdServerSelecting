@@ -536,7 +536,7 @@ namespace SelectRegionForDbd
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Dead by Daylight Region Selector";
+            Text = "Dead by Daylight Region Selector v1.2";
             ResumeLayout(false);
             PerformLayout();
         }
